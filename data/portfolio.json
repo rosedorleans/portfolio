@@ -1,0 +1,228 @@
+{
+  "projects": [
+    {
+      "id": "zendaya",
+      "category": "writing",
+      "titleFr": "L'histoire de Zendaya",
+      "titleEn": "Zendaya's Story",
+      "date": "2026-04-19",
+      "url": "https://youtu.be/IlTuUsHBvnU?si=4QRusCy_ALb-UeDB",
+      "image": "assets/images/ecriture-zendaya.png",
+      "altFr": "Visuel du projet L'histoire de Zendaya",
+      "altEn": "Visual for Zendaya's Story",
+      "tagsFr": [
+        "youtube",
+        "storytelling",
+        "personnalité"
+      ],
+      "tagsEn": [
+        "youtube",
+        "storytelling",
+        "celebrity"
+      ],
+      "tags": [
+        "youtube",
+        "storytelling",
+        "personnalité"
+      ],
+      "visible": true
+    },
+    {
+      "id": "breaking-bad",
+      "category": "writing",
+      "titleFr": "Le génie de Breaking Bad",
+      "titleEn": "The Genius of Breaking Bad",
+      "date": "2026-03-22",
+      "url": "https://youtu.be/fNx3EiwwY14?si=Rv0JVQb70m6iimsz",
+      "image": "assets/images/ecriture-breaking-bad.png",
+      "altFr": "Visuel du projet Le génie de Breaking Bad",
+      "altEn": "Visual for The Genius of Breaking Bad",
+      "tagsFr": [
+        "youtube",
+        "storytelling",
+        "série tv"
+      ],
+      "tagsEn": [
+        "youtube",
+        "storytelling",
+        "tv show"
+      ],
+      "tags": [
+        "youtube",
+        "storytelling",
+        "série tv"
+      ],
+      "visible": true
+    },
+    {
+      "id": "bridgerton",
+      "category": "writing",
+      "titleFr": "L'histoire de Bridgerton",
+      "titleEn": "Bridgerton's Story",
+      "date": "2026-03-01",
+      "url": "https://youtu.be/Kg--E0-0p6w?si=kNLxxeuFx3YCCHT5",
+      "image": "assets/images/ecriture-bridgerton.png",
+      "altFr": "Visuel du projet L'histoire de Bridgerton",
+      "altEn": "Visual for Bridgerton's Story",
+      "tagsFr": [
+        "youtube",
+        "storytelling",
+        "série tv"
+      ],
+      "tagsEn": [
+        "youtube",
+        "storytelling",
+        "tv show"
+      ],
+      "tags": [
+        "youtube",
+        "storytelling",
+        "série tv"
+      ],
+      "visible": true
+    },
+    {
+      "id": "leafy-corner",
+      "category": "translation",
+      "titleFr": "Leafy Corner",
+      "titleEn": "Leafy Corner",
+      "date": "2026-04-10",
+      "url": "https://store.steampowered.com/app/3558600/Leafy_Corner/",
+      "image": "assets/images/trad-leafy-corner.png",
+      "altFr": "Visuel du projet Leafy Corner",
+      "altEn": "Visual for Leafy Corner",
+      "tagsFr": [
+        "jeu vidéo",
+        "simulation",
+        "cosy"
+      ],
+      "tagsEn": [
+        "video game",
+        "sim",
+        "cozy"
+      ],
+      "tags": [
+        "jeu vidéo",
+        "simulation",
+        "cosy"
+      ],
+      "visible": true
+    },
+    {
+      "id": "together-moon-escape",
+      "category": "translation",
+      "titleFr": "Together: Moon Escape",
+      "titleEn": "Together: Moon Escape",
+      "date": "2026-02-26",
+      "url": "https://store.steampowered.com/app/3744430/Together_Moon_Escape/",
+      "image": "assets/images/trad-together-moon-escape.png",
+      "altFr": "Visuel du projet Together: Moon Escape",
+      "altEn": "Visual for Together: Moon Escape",
+      "tagsFr": [
+        "jeu vidéo",
+        "coop",
+        "espace"
+      ],
+      "tagsEn": [
+        "video game",
+        "coop",
+        "space"
+      ],
+      "tags": [
+        "jeu vidéo",
+        "coop",
+        "espace"
+      ],
+      "visible": true
+    },
+    {
+      "id": "ammossum",
+      "category": "translation",
+      "titleFr": "Ammossum",
+      "titleEn": "Ammossum",
+      "date": "2026-02-23",
+      "url": "https://store.steampowered.com/app/2659600/Ammossum/",
+      "image": "assets/images/trad-ammossum.png",
+      "altFr": "Visuel du projet Ammossum",
+      "altEn": "Visual for Ammossum",
+      "tagsFr": [
+        "jeu vidéo",
+        "roguelike",
+        "opossum"
+      ],
+      "tagsEn": [
+        "video game",
+        "roguelike",
+        "possum"
+      ],
+      "tags": [
+        "jeu vidéo",
+        "roguelike",
+        "opossum"
+      ],
+      "visible": true
+    }
+  ],
+  "diplomas": [
+    {
+      "id": "master-web",
+      "titleFr": "Master développement web",
+      "titleEn": "Master's degree in Web Development",
+      "sectorFr": "Développement web",
+      "sectorEn": "Web development",
+      "placeFr": "ECV, Nantes",
+      "placeEn": "ECV, Nantes",
+      "yearFr": "2024",
+      "yearEn": "2024",
+      "visible": true
+    },
+    {
+      "id": "cda",
+      "titleFr": "Bachelor Concepteur d'application",
+      "titleEn": "Application Designer Bachelor",
+      "sectorFr": "Développement web",
+      "sectorEn": "Web development",
+      "placeFr": "EPSI, Nantes",
+      "placeEn": "EPSI, Nantes",
+      "yearFr": "2022",
+      "yearEn": "2022",
+      "visible": true
+    },
+    {
+      "id": "dwwm",
+      "titleFr": "Développement web",
+      "titleEn": "Web Developer",
+      "sectorFr": "Développement web",
+      "sectorEn": "Web development",
+      "placeFr": "ENI, Nantes",
+      "placeEn": "ENI, Nantes",
+      "yearFr": "2021",
+      "yearEn": "2021",
+      "visible": true
+    },
+    {
+      "id": "deug-llce",
+      "titleFr": "LLCE Anglais",
+      "titleEn": "English Litt Degree",
+      "sectorFr": "Langues étrangères",
+      "sectorEn": "Foreign languages",
+      "placeFr": "Sorbonne Nouvelle, Paris / Université de Nantes ",
+      "placeEn": "Sorbonne, Paris / Nantes University",
+      "yearFr": "2018",
+      "yearEn": "2018",
+      "visible": true
+    },
+    {
+      "id": "prepa-arts",
+      "titleFr": "Classe prépa d'arts graphiques",
+      "titleEn": "Graphic Arts Preparatory Class",
+      "sectorFr": "Arts graphiques",
+      "sectorEn": "Graphic arts",
+      "placeFr": "EPSAA, Paris",
+      "placeEn": "EPSAA, Paris",
+      "yearFr": "2016",
+      "yearEn": "2016",
+      "visible": true
+    }
+  ]
+}

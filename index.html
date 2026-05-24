@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content=""
+    >
+    <title></title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <noscript>
+      <style>
+        body.is-loading [data-skeleton],
+        body.is-loading .project-link span,
+        body.is-loading .site-footer a {
+          color: inherit;
+          background: transparent;
+          animation: none;
+        }
+
+        body.is-loading .project-link time,
+        body.is-loading .site-footer > p {
+          color: #4e4943;
+          background: transparent;
+          animation: none;
+        }
+
+        body.is-loading .image-placeholder {
+          background: #fbf5ed;
+          animation: none;
+        }
+
+        body.is-loading .image-placeholder:not(.has-preview)::before,
+        body.is-loading .image-placeholder:not(.has-preview)::after,
+        body.is-loading .image-placeholder:not(.has-preview) span {
+          opacity: 1;
+        }
+
+        body.is-loading .project-preview {
+          opacity: 1;
+        }
+
+        body.is-loading .image-placeholder.has-preview::before,
+        body.is-loading .image-placeholder.has-preview::after,
+        body.is-loading .image-placeholder.has-preview span {
+          opacity: 0;
+        }
+
+        body.is-loading .project-link,
+        body.is-loading .social-links a {
+          pointer-events: auto;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body class="is-loading">
+    <button
+      class="language-toggle"
+      type="button"
+      data-language-toggle
+    >
+    </button>
+
+    <main class="page-shell" data-i18n-aria-label="portfolioLabel">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow" data-skeleton data-i18n="heroEyebrow"></p>
+        <h1 id="hero-title" data-skeleton data-i18n="heroName"></h1>
+        <p class="hero-subtitle typewriter" data-text="" data-skeleton data-i18n="heroSubtitle"></p>
+        <p class="hero-intro" data-skeleton data-i18n="heroIntro"></p>
+      </section>
+
+      <section class="portfolio-content" data-i18n-aria-label="portfolioContentLabel">
+        <div class="view-switcher" role="tablist" data-i18n-aria-label="viewSwitcherLabel">
+          <button
+            id="activities-tab"
+            class="view-tab is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="activities-panel"
+            data-view-tab="activities"
+            data-skeleton
+            data-i18n="activitiesTab"
+          ></button>
+          <button
+            id="diplomas-tab"
+            class="view-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="diplomas-panel"
+            data-view-tab="diplomas"
+            data-skeleton
+            data-i18n="diplomasTab"
+          ></button>
+        </div>
+
+        <section
+          id="activities-panel"
+          class="activities view-panel"
+          role="tabpanel"
+          aria-labelledby="activities-tab"
+          data-view-panel="activities"
+          data-i18n-aria-label="activitiesLabel"
+        >
+          <article class="activity-card writing">
+            <div class="activity-copy">
+              <p class="section-number" data-skeleton data-i18n="writingNumber"></p>
+              <h2 data-skeleton data-i18n="writingTitle"></h2>
+              <p data-skeleton data-i18n="writingBody"></p>
+            </div>
+
+            <div
+              class="visual-stack"
+              data-i18n-aria-label="writingVisualLabel"
+            >
+              <div class="image-placeholder landscape has-preview">
+                <img
+                  class="project-preview"
+                  data-project-preview
+                  src="assets/images/ecriture-breaking-bad.png"
+                  alt=""
+                  decoding="async"
+                >
+                <span></span>
+              </div>
+              <div class="project-tags" data-project-tags aria-live="polite" hidden></div>
+            </div>
+
+            <div class="project-panel" data-project-panel data-visible-projects="5">
+              <div class="project-list" data-project-list="writing" data-i18n-aria-label="writingProjectsLabel"></div>
+            </div>
+          </article>
+
+          <article class="activity-card translation">
+            <div class="activity-copy">
+              <p class="section-number" data-skeleton data-i18n="translationNumber"></p>
+              <h2 data-skeleton data-i18n="translationTitle"></h2>
+              <p data-skeleton data-i18n="translationBody"></p>
+            </div>
+
+            <div
+              class="visual-stack"
+              data-i18n-aria-label="translationVisualLabel"
+            >
+              <div class="image-placeholder landscape has-preview">
+                <img
+                  class="project-preview"
+                  data-project-preview
+                  src="assets/images/trad-leafy-corner.png"
+                  alt=""
+                  decoding="async"
+                >
+                <span></span>
+              </div>
+              <div class="project-tags" data-project-tags aria-live="polite" hidden></div>
+            </div>
+
+            <div class="project-panel" data-project-panel data-visible-projects="5">
+              <div class="project-list" data-project-list="translation" data-i18n-aria-label="translationProjectsLabel"></div>
+            </div>
+          </article>
+        </section>
+
+        <section
+          id="diplomas-panel"
+          class="diplomas view-panel"
+          role="tabpanel"
+          aria-labelledby="diplomas-tab"
+          data-view-panel="diplomas"
+          data-i18n-aria-label="diplomasLabel"
+          hidden
+        >
+          <div class="diploma-list" data-diploma-list></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer" data-i18n-aria-label="footerLabel">
+      <p data-skeleton data-i18n="socialsTitle"></p>
+      <div class="social-links">
+        <a href="mailto:rosedorleans1@gmail.com" data-i18n="socialEmail"></a>
+        <a href="https://www.instagram.com/rose.dorleans/" target="_blank" rel="noreferrer" data-i18n="socialInstagram"></a>
+        <a href="https://x.com/RoseDorleans" target="_blank" rel="noreferrer" data-i18n="socialX"></a>
+        <a href="https://www.malt.fr/profile/rosedorleans" target="_blank" rel="noreferrer" data-i18n="socialMalt"></a>
+        <a href="https://letterboxd.com/EsorSnaelrod/" target="_blank" rel="noreferrer" data-i18n="socialLetterboxd"></a>
+        <a href="https://www.goodreads.com/user/show/180238679-rose" target="_blank" rel="noreferrer" data-i18n="socialGoodreads"></a>
+      </div>
+    </footer>
+
+    <script src="projects.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
