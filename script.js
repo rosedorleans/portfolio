@@ -6,9 +6,12 @@ const metaDescription = document.querySelector('meta[name="description"]');
 const viewTabs = document.querySelectorAll("[data-view-tab]");
 const viewPanels = document.querySelectorAll("[data-view-panel]");
 const diplomaList = document.querySelector("[data-diploma-list]");
+const socialHintOutput = document.querySelector("[data-social-hint-output]");
+const socialHintLinks = document.querySelectorAll("[data-social-hint]");
 const projectStore = window.portfolioProjectStore;
 let currentLanguage = "fr";
 let typewriterTimers = [];
+let activeSocialHintKey = "";
 const previewImageCache = new Map();
 const previewRequests = new WeakMap();
 const projectSelectionMedia = window.matchMedia("(max-width: 920px)");
@@ -56,6 +59,12 @@ const translations = {
     socialMalt: "Malt",
     socialLetterboxd: "Letterboxd",
     socialGoodreads: "Goodreads",
+    socialHintEmail: "Pour me contacter",
+    socialHintInstagram: "Pour suivre mes actus",
+    socialHintX: "Pour suivre TOUTES mes actus",
+    socialHintMalt: "Pour m'engager",
+    socialHintLetterboxd: "Pour voir ce que je regarde",
+    socialHintGoodreads: "Pour voir ce que je lis",
   },
   en: {
     htmlLang: "en",
@@ -87,7 +96,7 @@ const translations = {
     writingProjectsLabel: "Writing projects",
     translationTitle: "Translation",
     translationBody:
-      "Translator specialized in indie video games. My English studies and web development background help me understand studios' technical needs.",
+      "Translator specialized in indie video games. My web development background help me understand studios' technical needs.",
     translationVisualLabel: "Selected translation project visual",
     translationProjectsLabel: "Translation projects",
     translationNumber: "02",
@@ -99,6 +108,12 @@ const translations = {
     socialMalt: "Malt",
     socialLetterboxd: "Letterboxd",
     socialGoodreads: "Goodreads",
+    socialHintEmail: "To contact me",
+    socialHintInstagram: "To see my news",
+    socialHintX: "To see ALL my news",
+    socialHintMalt: "To hire me",
+    socialHintLetterboxd: "To see what I watch",
+    socialHintGoodreads: "To see what I read",
   },
 };
 
@@ -124,6 +139,16 @@ function typeText(element, text) {
 function stopTypewriter() {
   typewriterTimers.forEach((timer) => window.clearTimeout(timer));
   typewriterTimers = [];
+}
+
+function setSocialHint(key) {
+  if (!socialHintOutput) {
+    return;
+  }
+
+  activeSocialHintKey = key || "";
+  socialHintOutput.textContent = key ? translations[currentLanguage][key] || "" : "";
+  socialHintOutput.classList.toggle("is-visible", Boolean(key));
 }
 
 function getProjectAlt(link) {
@@ -408,6 +433,10 @@ function translatePage(language) {
     languageToggle.setAttribute("aria-label", copy.languageButtonLabel);
   }
 
+  if (activeSocialHintKey) {
+    setSocialHint(activeSocialHintKey);
+  }
+
   document.querySelectorAll("[data-project-panel]").forEach((panel) => {
     const activeLink = panel.querySelector(".project-link.is-active");
     const card = panel.closest(".activity-card");
@@ -542,6 +571,44 @@ function initializeProjectPanels() {
   });
 }
 
+function initializeSocialHints() {
+  const socialLinksContainer = document.querySelector(".social-links");
+
+  socialHintLinks.forEach((link) => {
+    link.addEventListener("mouseenter", () => {
+      setSocialHint(link.dataset.socialHint);
+    });
+
+    link.addEventListener("focus", () => {
+      setSocialHint(link.dataset.socialHint);
+    });
+
+    link.addEventListener("blur", () => {
+      setSocialHint("");
+    });
+  });
+
+  socialLinksContainer?.addEventListener("pointerover", (event) => {
+    const link = event.target.closest("[data-social-hint]");
+
+    if (link && socialLinksContainer.contains(link)) {
+      setSocialHint(link.dataset.socialHint);
+    }
+  });
+
+  socialLinksContainer?.addEventListener("mouseover", (event) => {
+    const link = event.target.closest("[data-social-hint]");
+
+    if (link && socialLinksContainer.contains(link)) {
+      setSocialHint(link.dataset.socialHint);
+    }
+  });
+
+  socialLinksContainer?.addEventListener("mouseleave", () => {
+    setSocialHint("");
+  });
+}
+
 async function initializePortfolio() {
   await projectStore.ready;
   renderProjectLists();
@@ -549,6 +616,7 @@ async function initializePortfolio() {
   translatePage(currentLanguage);
   initializePortfolioViews();
   initializeProjectPanels();
+  initializeSocialHints();
 }
 
 initializePortfolio();

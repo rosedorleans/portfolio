@@ -94,8 +94,7 @@ a {
 }
 
 .eyebrow,
-.section-number,
-.site-footer > p {
+.section-number {
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.8rem;
@@ -504,14 +503,49 @@ h1 {
 
 .site-footer {
   width: min(1120px, calc(100% - 32px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.78fr);
+  column-gap: clamp(20px, 5vw, 72px);
+  align-items: start;
   margin: 0 auto;
   padding: 0 0 42px;
+}
+
+.site-footer > p:first-child {
+  grid-column: 1 / -1;
+}
+
+.social-hover-copy {
+  grid-column: 2;
+  grid-row: 2;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 18px 0 0;
+  padding-top: 20px;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  text-align: right;
+  text-transform: none;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 180ms ease, transform 180ms ease, color 180ms ease;
+}
+
+.social-hover-copy.is-visible {
+  color: var(--ink);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .social-links {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  grid-column: 1;
+  grid-row: 2;
   margin-top: 18px;
   padding-top: 20px;
   border-top: 1px solid var(--line);
@@ -557,6 +591,7 @@ h1 {
 .is-loading [data-skeleton],
 .is-loading .project-link span,
 .is-loading .project-link time,
+.is-loading .social-hover-copy,
 .is-loading .site-footer a {
   color: transparent;
   border-radius: 4px;
@@ -605,6 +640,19 @@ h1 {
 @media (max-width: 920px) {
   h1 {
     font-size: 6rem;
+  }
+
+  .site-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .social-hover-copy {
+    grid-row: 3;
+    justify-content: flex-end;
+    margin-top: 12px;
+    padding-top: 0;
+    border-top: 0;
+    text-align: right;
   }
 
   .diploma-row {
