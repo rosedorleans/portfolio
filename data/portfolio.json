@@ -7,7 +7,7 @@
       "titleEn": "Zendaya's Story",
       "date": "2026-04-19",
       "url": "https://youtu.be/IlTuUsHBvnU?si=4QRusCy_ALb-UeDB",
-      "image": "assets/images/ecriture-zendaya.png",
+      "image": "assets/images/ecriture-zendaya.jpg",
       "altFr": "Visuel du projet L'histoire de Zendaya",
       "altEn": "Visual for Zendaya's Story",
       "tagsFr": [
@@ -34,7 +34,7 @@
       "titleEn": "The Genius of Breaking Bad",
       "date": "2026-03-22",
       "url": "https://youtu.be/fNx3EiwwY14?si=Rv0JVQb70m6iimsz",
-      "image": "assets/images/ecriture-breaking-bad.png",
+      "image": "assets/images/ecriture-breaking-bad.jpg",
       "altFr": "Visuel du projet Le génie de Breaking Bad",
       "altEn": "Visual for The Genius of Breaking Bad",
       "tagsFr": [
@@ -61,7 +61,7 @@
       "titleEn": "Bridgerton's Story",
       "date": "2026-03-01",
       "url": "https://youtu.be/Kg--E0-0p6w?si=kNLxxeuFx3YCCHT5",
-      "image": "assets/images/ecriture-bridgerton.png",
+      "image": "assets/images/ecriture-bridgerton.jpg",
       "altFr": "Visuel du projet L'histoire de Bridgerton",
       "altEn": "Visual for Bridgerton's Story",
       "tagsFr": [
@@ -88,7 +88,7 @@
       "titleEn": "Leafy Corner",
       "date": "2026-04-10",
       "url": "https://store.steampowered.com/app/3558600/Leafy_Corner/",
-      "image": "assets/images/trad-leafy-corner.png",
+      "image": "assets/images/trad-leafy-corner.jpg",
       "altFr": "Visuel du projet Leafy Corner",
       "altEn": "Visual for Leafy Corner",
       "tagsFr": [
@@ -115,7 +115,7 @@
       "titleEn": "Together: Moon Escape",
       "date": "2026-02-26",
       "url": "https://store.steampowered.com/app/3744430/Together_Moon_Escape/",
-      "image": "assets/images/trad-together-moon-escape.png",
+      "image": "assets/images/trad-together-moon-escape.jpg",
       "altFr": "Visuel du projet Together: Moon Escape",
       "altEn": "Visual for Together: Moon Escape",
       "tagsFr": [
@@ -142,7 +142,7 @@
       "titleEn": "Ammossum",
       "date": "2026-02-23",
       "url": "https://store.steampowered.com/app/2659600/Ammossum/",
-      "image": "assets/images/trad-ammossum.png",
+      "image": "assets/images/trad-ammossum.jpg",
       "altFr": "Visuel du projet Ammossum",
       "altEn": "Visual for Ammossum",
       "tagsFr": [
@@ -161,6 +161,87 @@
         "opossum"
       ],
       "visible": true
+    },
+    {
+      "id": "Crown Siege",
+      "category": "translation",
+      "titleFr": "Crown Siege",
+      "titleEn": "Crown Siege",
+      "date": "2026-05-22",
+      "url": "https://store.steampowered.com/app/4310440/Crown_Siege/",
+      "image": "assets/images/trad-crown-siege.jpg",
+      "altFr": "Visuel du projet Crown Siege",
+      "altEn": "Visual for Crown Siege",
+      "tagsFr": [
+        "jeu vidéo",
+        "tower defense",
+        "couronnes"
+      ],
+      "tagsEn": [
+        "video game",
+        "tower defense",
+        "crowns"
+      ],
+      "tags": [
+        "jeu vidéo",
+        "tower defense",
+        "couronnes"
+      ],
+      "visible": true
+    },
+    {
+      "id": "Wheel Make It",
+      "category": "translation",
+      "titleFr": "Wheel Make It",
+      "titleEn": "Wheel Make It",
+      "date": "2026-05-30",
+      "url": "https://store.steampowered.com/app/4213320/Wheel_Make_It/",
+      "image": "assets/images/trad-wheel-make-it.jpg",
+      "altFr": "Visuel du projet Wheel Make It",
+      "altEn": "Visual for Wheel Make It",
+      "tagsFr": [
+        "jeu vidéo",
+        "coop",
+        "fauteuil roulant"
+      ],
+      "tagsEn": [
+        "video game",
+        "coop",
+        "wheelchair"
+      ],
+      "tags": [
+        "jeu vidéo",
+        "coop",
+        "fauteuil roulant"
+      ],
+      "visible": true
+    },
+    {
+      "id": "Void Pachinko",
+      "category": "translation",
+      "titleFr": "Void Pachinko",
+      "titleEn": "Void Pachinko",
+      "date": "2026-06-08",
+      "url": "https://store.steampowered.com/app/4077060/Void_Pachinko/",
+      "image": "assets/images/trad-void-pachinko.jpg",
+      "altFr": "Visuel du projet Void Pachinko",
+      "altEn": "Visual for Void Pachinko",
+      "tagsFr": [
+        "jeu vidéo",
+        "Stratégie",
+        "pachinko"
+      ],
+      "tagsEn": [
+        "video game",
+        "Strategy",
+        "pachinko"
+      ],
+      "tags": [
+        "jeu vidéo",
+        "Stratégie",
+        "pachinko"
+      ],
+      "visible": true
     }
   ],
   "diplomas": [
@@ -177,35 +258,11 @@
       "visible": true
     },
     {
-      "id": "cda",
-      "titleFr": "Bachelor Concepteur d'application",
-      "titleEn": "Application Designer Bachelor",
-      "sectorFr": "Développement web",
-      "sectorEn": "Web development",
-      "placeFr": "EPSI, Nantes",
-      "placeEn": "EPSI, Nantes",
-      "yearFr": "2022",
-      "yearEn": "2022",
-      "visible": true
-    },
-    {
-      "id": "dwwm",
-      "titleFr": "Formation développement web",
-      "titleEn": "Web Developer",
-      "sectorFr": "Développement web",
-      "sectorEn": "Web development",
-      "placeFr": "ENI, Nantes",
-      "placeEn": "ENI, Nantes",
-      "yearFr": "2021",
-      "yearEn": "2021",
-      "visible": true
-    },
-    {
       "id": "deug-llce",
       "titleFr": "LLCE Anglais",
       "titleEn": "English Litt Degree",
-      "sectorFr": "Langues étrangères",
-      "sectorEn": "Foreign languages",
+      "sectorFr": "Lettres et Langues étrangères",
+      "sectorEn": "Litt & Foreign languages",
       "placeFr": "Sorbonne Nouvelle, Paris / Université de Nantes ",
       "placeEn": "Sorbonne, Paris / Nantes University",
       "yearFr": "2018",

@@ -15,6 +15,7 @@ let activeSocialHintKey = "";
 const previewImageCache = new Map();
 const previewRequests = new WeakMap();
 const projectSelectionMedia = window.matchMedia("(max-width: 920px)");
+const socialHintMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
 
 const translations = {
   fr: {
@@ -47,7 +48,7 @@ const translations = {
     writingProjectsLabel: "Projets d'écriture",
     translationTitle: "Traduction",
     translationBody:
-      "Traductrice spécialisée en jeux vidéo indés. Mon master en développement web me permet de comprendre les besoins techniques des studios.",
+      "Traductrice spécialisée en jeux vidéo indés. Je suis bilingue anglais, et grâce à mon master en développement web, je peux comprendre les besoins techniques des studios.",
     translationVisualLabel: "Visuel du projet de traduction sélectionné",
     translationProjectsLabel: "Projets de traduction",
     translationNumber: "02",
@@ -56,13 +57,11 @@ const translations = {
     socialEmail: "Email",
     socialInstagram: "Instagram",
     socialX: "X",
-    socialMalt: "Malt",
     socialLetterboxd: "Letterboxd",
     socialGoodreads: "Goodreads",
     socialHintEmail: "Pour me contacter",
     socialHintInstagram: "Pour suivre mes actus",
     socialHintX: "Pour suivre TOUTES mes actus",
-    socialHintMalt: "Pour m'engager",
     socialHintLetterboxd: "Pour voir ce que je regarde",
     socialHintGoodreads: "Pour voir ce que je lis",
   },
@@ -91,12 +90,12 @@ const translations = {
     writingNumber: "01",
     writingTitle: "Writing",
     writingBody:
-      "Script writer with a love for cinema and pop culture. Three years of literature studies taught me how to research, write, analyze, synthesize, and understand the codes of narrative writing.",
+      "Ghost writer with a love for cinema and pop culture. Three years of literature studies taught me how to research, write, analyze, synthesize, and understand the codes of narrative writing.",
     writingVisualLabel: "Selected writing project visual",
     writingProjectsLabel: "Writing projects",
     translationTitle: "Translation",
     translationBody:
-      "Translator specialized in indie video games. My web development background help me understand studios' technical needs.",
+      "Translator specialized in indie video games. Born french, my web development background and litt studies help me understand english and studios' technical needs.",
     translationVisualLabel: "Selected translation project visual",
     translationProjectsLabel: "Translation projects",
     translationNumber: "02",
@@ -105,13 +104,11 @@ const translations = {
     socialEmail: "Email",
     socialInstagram: "Instagram",
     socialX: "X",
-    socialMalt: "Malt",
     socialLetterboxd: "Letterboxd",
     socialGoodreads: "Goodreads",
     socialHintEmail: "To contact me",
     socialHintInstagram: "To see my news",
     socialHintX: "To see ALL my news",
-    socialHintMalt: "To hire me",
     socialHintLetterboxd: "To see what I watch",
     socialHintGoodreads: "To see what I read",
   },
@@ -146,9 +143,11 @@ function setSocialHint(key) {
     return;
   }
 
-  activeSocialHintKey = key || "";
-  socialHintOutput.textContent = key ? translations[currentLanguage][key] || "" : "";
-  socialHintOutput.classList.toggle("is-visible", Boolean(key));
+  const nextKey = socialHintMedia.matches ? key || "" : "";
+
+  activeSocialHintKey = nextKey;
+  socialHintOutput.textContent = nextKey ? translations[currentLanguage][nextKey] || "" : "";
+  socialHintOutput.classList.toggle("is-visible", Boolean(nextKey));
 }
 
 function getProjectAlt(link) {
@@ -496,6 +495,55 @@ function initializePortfolioViews() {
   setActivePortfolioView("activities");
 }
 
+function updateProjectScrollbar(panel, projectList) {
+  if (!panel || !projectList) {
+    return;
+  }
+
+  const maxScroll = projectList.scrollHeight - projectList.clientHeight;
+  const listHeight = projectList.clientHeight;
+  const hasScroll = maxScroll > 1 && listHeight > 0;
+
+  panel.classList.toggle("has-project-scroll", hasScroll);
+  panel.style.setProperty("--project-scrollbar-top", `${projectList.offsetTop}px`);
+  panel.style.setProperty("--project-scrollbar-height", `${listHeight}px`);
+
+  if (!hasScroll) {
+    panel.style.setProperty("--project-scrollbar-thumb-height", "0px");
+    panel.style.setProperty("--project-scrollbar-thumb-top", `${projectList.offsetTop}px`);
+    return;
+  }
+
+  const thumbHeight = Math.max(24, Math.round((projectList.clientHeight / projectList.scrollHeight) * listHeight));
+  const thumbTravel = listHeight - thumbHeight;
+  const thumbTop = projectList.offsetTop + Math.round((projectList.scrollTop / maxScroll) * thumbTravel);
+
+  panel.style.setProperty("--project-scrollbar-thumb-height", `${thumbHeight}px`);
+  panel.style.setProperty("--project-scrollbar-thumb-top", `${thumbTop}px`);
+}
+
+function initializeProjectScrollbar(panel, projectList) {
+  if (!projectList) {
+    return;
+  }
+
+  const updateScrollbar = () => updateProjectScrollbar(panel, projectList);
+
+  projectList.addEventListener("scroll", updateScrollbar, { passive: true });
+  window.addEventListener("resize", updateScrollbar);
+
+  if (typeof ResizeObserver === "function") {
+    const observer = new ResizeObserver(updateScrollbar);
+
+    observer.observe(panel);
+    observer.observe(projectList);
+    panel.projectScrollbarObserver = observer;
+  }
+
+  updateScrollbar();
+  window.requestAnimationFrame(updateScrollbar);
+}
+
 function initializeProjectPanels() {
   projectPanels.forEach((panel) => {
     const card = panel.closest(".activity-card");
@@ -508,6 +556,7 @@ function initializeProjectPanels() {
     let resetLink = defaultLink;
 
     panel.style.setProperty("--visible-projects", visibleProjects);
+    initializeProjectScrollbar(panel, projectList);
 
     function setActiveLink(link) {
       if (!link) {
@@ -607,6 +656,16 @@ function initializeSocialHints() {
   socialLinksContainer?.addEventListener("mouseleave", () => {
     setSocialHint("");
   });
+
+  const clearSocialHintOnMediaChange = () => {
+    setSocialHint("");
+  };
+
+  if (typeof socialHintMedia.addEventListener === "function") {
+    socialHintMedia.addEventListener("change", clearSocialHintOnMediaChange);
+  } else {
+    socialHintMedia.addListener?.(clearSocialHintOnMediaChange);
+  }
 }
 
 async function initializePortfolio() {

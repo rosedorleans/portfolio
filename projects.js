@@ -76,8 +76,18 @@
     };
   }
 
+  function getProjectTimestamp(project) {
+    const timestamp = Date.parse(project.date);
+
+    return Number.isNaN(timestamp) ? 0 : timestamp;
+  }
+
+  function sortProjectsByNewest(projects) {
+    return [...projects].sort((projectA, projectB) => getProjectTimestamp(projectB) - getProjectTimestamp(projectA));
+  }
+
   function setData(data) {
-    projectsCache = Array.isArray(data?.projects) ? data.projects.map(normalizeProject) : [];
+    projectsCache = Array.isArray(data?.projects) ? sortProjectsByNewest(data.projects.map(normalizeProject)) : [];
     diplomasCache = Array.isArray(data?.diplomas) ? data.diplomas.map(normalizeDiploma) : [];
     isLoaded = true;
   }

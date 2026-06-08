@@ -406,9 +406,44 @@ h1 {
 }
 
 .project-panel {
+  position: relative;
   min-width: 0;
   --project-row-height: 45px;
   --visible-projects: 5;
+  --project-scrollbar-width: 2px;
+  --project-scrollbar-top: 0px;
+  --project-scrollbar-height: 0px;
+  --project-scrollbar-thumb-top: 0px;
+  --project-scrollbar-thumb-height: 0px;
+}
+
+.project-panel::before,
+.project-panel::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: var(--project-scrollbar-width);
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.project-panel::before {
+  top: var(--project-scrollbar-top);
+  height: var(--project-scrollbar-height);
+  background: rgba(78, 73, 67, 0.08);
+}
+
+.project-panel::after {
+  top: var(--project-scrollbar-thumb-top);
+  height: var(--project-scrollbar-thumb-height);
+  background: var(--project-border);
+}
+
+.project-panel.has-project-scroll::before,
+.project-panel.has-project-scroll::after {
+  opacity: 1;
 }
 
 .project-list {
@@ -418,14 +453,22 @@ h1 {
   max-height: calc(var(--project-row-height) * var(--visible-projects));
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding-right: 8px;
-  scrollbar-color: var(--line) transparent;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
+  padding-right: 15px;
+  -ms-overflow-style: none;
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
 }
 
 .project-list::-webkit-scrollbar {
-  width: 6px;
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.project-list::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .project-list::-webkit-scrollbar-track {
@@ -433,7 +476,7 @@ h1 {
 }
 
 .project-list::-webkit-scrollbar-thumb {
-  background: var(--line);
+  background: var(--project-border);
   border-radius: 999px;
 }
 
