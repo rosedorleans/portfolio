@@ -83,14 +83,14 @@ a {
 }
 
 .hero {
-  min-height: clamp(520px, 82vh, 820px);
+  min-height: clamp(520px, 90vh, 820px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 30px;
   text-align: center;
-  padding: 72px 0 56px;
+  padding: 70px 0;
 }
 
 .eyebrow,
@@ -121,7 +121,7 @@ h1 {
   min-height: 1.7em;
   margin-bottom: 0;
   color: var(--ink-soft);
-  font-size: 1.35rem;
+  font-size: 2rem;
 }
 
 .hero-subtitle::after {
@@ -141,6 +141,24 @@ h1 {
   color: var(--ink-soft);
   font-size: 1.08rem;
   line-height: 1.8;
+}
+
+.hero-intro-lead,
+.hero-intro-cta {
+  display: block;
+}
+
+.hero-intro-lead {
+  white-space: pre-line;
+}
+
+.hero-intro-cta {
+  margin-top: 15px;
+}
+
+.hero-intro strong {
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .portfolio-content {
@@ -371,7 +389,7 @@ h1 {
     var(--paper-raised);
 }
 
-.project-tags {
+.project-video-stats {
   position: absolute;
   top: calc(100% + 12px);
   left: 0;
@@ -379,30 +397,31 @@ h1 {
   width: 100%;
   min-height: 28px;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
+  color: var(--project-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
   pointer-events: none;
 }
 
-.project-tags[hidden] {
+.project-video-stats[hidden] {
   display: flex !important;
   visibility: hidden;
 }
 
-.project-tags span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 0 9px;
-  border: 1px solid var(--project-border);
-  border-radius: 999px;
-  background: var(--project-bg);
-  color: var(--project-color);
-  font-size: 0.62rem;
-  line-height: 1;
-  text-transform: uppercase;
+.project-video-stats-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .project-panel {
@@ -415,6 +434,8 @@ h1 {
   --project-scrollbar-height: 0px;
   --project-scrollbar-thumb-top: 0px;
   --project-scrollbar-thumb-height: 0px;
+  --project-new-sticker-top: 0px;
+  --project-new-sticker-right: 0px;
 }
 
 .project-panel::before,
@@ -489,13 +510,14 @@ h1 {
 
 .project-link {
   appearance: none;
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 74px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) minmax(86px, max-content);
+  gap: 12px;
   align-items: center;
   width: 100%;
   height: var(--project-row-height);
-  padding: 8px 0;
+  padding: 7px 0;
   border: 0;
   border-top: 1px solid transparent;
   border-bottom: 1px solid var(--line);
@@ -511,9 +533,17 @@ h1 {
   border-top-color: var(--line);
 }
 
-.project-link span {
+.project-title {
   font-size: 0.82rem;
   line-height: 1.32;
+}
+
+.project-meta {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  min-width: 0;
+  line-height: 1;
 }
 
 .project-link time {
@@ -521,6 +551,57 @@ h1 {
   font-size: 0.62rem;
   text-align: right;
   white-space: nowrap;
+}
+
+.project-panel > .project-new-sticker {
+  position: absolute;
+  top: var(--project-new-sticker-top);
+  right: var(--project-new-sticker-right);
+  z-index: 5;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px 3px 0;
+  clip-path: polygon(
+    50% 0,
+    59% 12%,
+    73% 5%,
+    78% 19%,
+    93% 20%,
+    88% 35%,
+    100% 45%,
+    89% 56%,
+    94% 70%,
+    79% 71%,
+    72% 86%,
+    59% 80%,
+    50% 96%,
+    41% 80%,
+    28% 86%,
+    21% 71%,
+    6% 70%,
+    11% 56%,
+    0 45%,
+    12% 35%,
+    7% 20%,
+    22% 19%,
+    27% 5%,
+    41% 12%
+  );
+  background: var(--ink);
+  color: var(--paper-raised);
+  font: 900 0.62rem/1 Arial, Helvetica, sans-serif;
+  font-style: italic;
+  text-transform: uppercase;
+  transform: rotate(8deg);
+  transition: opacity 20ms linear;
+  pointer-events: none;
+}
+
+.project-panel > .project-new-sticker.is-hidden {
+  opacity: 0;
 }
 
 .project-link:hover,
@@ -660,8 +741,13 @@ h1 {
 }
 
 .is-loading .project-link,
+.is-loading .project-new-sticker,
 .is-loading .social-links a {
   pointer-events: none;
+}
+
+.is-loading .project-new-sticker {
+  opacity: 0;
 }
 
 @keyframes skeleton-shimmer {
@@ -716,16 +802,11 @@ h1 {
     padding: 2px 0 6px;
   }
 
-  .project-tags {
+  .project-video-stats {
     top: calc(100% + 4px);
     min-height: 22px;
     gap: 6px;
-  }
-
-  .project-tags span {
-    min-height: 20px;
-    padding: 0 7px;
-    font-size: 0.56rem;
+    font-size: 0.64rem;
   }
 
   .project-item.has-url {
@@ -835,9 +916,26 @@ h1 {
     padding: 10px 0;
   }
 
+  .project-meta {
+    grid-auto-flow: column;
+    justify-content: start;
+    justify-items: start;
+    gap: 10px;
+  }
+
+  .project-link time {
+    text-align: left;
+  }
+
   .social-links {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .project-panel > .project-new-sticker {
+    transform: translateY(12px) rotate(8deg);
   }
 }
 

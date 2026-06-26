@@ -8,12 +8,15 @@ const viewPanels = document.querySelectorAll("[data-view-panel]");
 const diplomaList = document.querySelector("[data-diploma-list]");
 const socialHintOutput = document.querySelector("[data-social-hint-output]");
 const socialHintLinks = document.querySelectorAll("[data-social-hint]");
+const youtubeApiKeyMeta = document.querySelector('meta[name="youtube-api-key"]');
 const projectStore = window.portfolioProjectStore;
+const youtubeViewsDataPath = "data/youtube-views.json";
 let currentLanguage = "fr";
 let typewriterTimers = [];
 let activeSocialHintKey = "";
 const previewImageCache = new Map();
 const previewRequests = new WeakMap();
+const youtubeViewCounts = new Map();
 const projectSelectionMedia = window.matchMedia("(max-width: 920px)");
 const socialHintMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
 
@@ -39,13 +42,16 @@ const translations = {
     heroEyebrow: "Portfolio / écriture & traduction",
     heroName: "Rose Dorléans",
     heroSubtitle: "Autrice / Traductrice",
-    heroIntro: "Scripts, récits et localisations sensibles au ton, au rythme et aux détails.",
+    heroIntro:
+      '<span class="hero-intro-lead">Scripts, récits et localisations\nsensibles au ton, au rythme et aux détails.</span><span class="hero-intro-cta">Engagez-moi pour <strong>rechercher</strong>, <strong>écrire</strong>, <strong>relire</strong> ou <strong>traduire</strong>,\n et gagnez du temps et de la qualité sur vos projets.</span>',
     writingNumber: "01",
     writingTitle: "Écriture",
     writingBody:
       "Autrice de script, passionnée par le cinéma et la pop culture. Mes 3 années d'études de lettres m'ont appris à rechercher, analyser, rédiger et comprendre les codes de l'écriture narrative.",
     writingVisualLabel: "Visuel du projet d'écriture sélectionné",
     writingProjectsLabel: "Projets d'écriture",
+    youtubeViewsSingular: "vue",
+    youtubeViewsPlural: "vues",
     translationTitle: "Traduction",
     translationBody:
       "Traductrice spécialisée en jeux vidéo indés. Je suis bilingue anglais, et grâce à mon master en développement web, je peux comprendre les besoins techniques des studios.",
@@ -86,13 +92,16 @@ const translations = {
     heroEyebrow: "Portfolio / writing & translation",
     heroName: "Rose Dorléans",
     heroSubtitle: "Writer / Translator",
-    heroIntro: "Scripts, stories, and localizations shaped around tone, rhythm, and detail.",
+    heroIntro:
+      '<span class="hero-intro-lead">Scripts, stories, and localizations\nshaped around tone, rhythm, and detail.</span><span class="hero-intro-cta">Hire me to <strong>research</strong>, <strong>write</strong>, <strong>proofread</strong>, or <strong>translate</strong>, and save time while raising the quality of your projects.</span>',
     writingNumber: "01",
     writingTitle: "Writing",
     writingBody:
       "Ghost writer with a love for cinema and pop culture. Three years of literature studies taught me how to research, write, analyze, synthesize, and understand the codes of narrative writing.",
     writingVisualLabel: "Selected writing project visual",
     writingProjectsLabel: "Writing projects",
+    youtubeViewsSingular: "view",
+    youtubeViewsPlural: "views",
     translationTitle: "Translation",
     translationBody:
       "Translator specialized in indie video games. Born french, my web development background and litt studies help me understand english and studios' technical needs.",
@@ -160,36 +169,6 @@ function getProjectAlt(link) {
   return link.textContent.trim();
 }
 
-function getProjectTags(link) {
-  try {
-    const tagsSource = currentLanguage === "en" ? link.dataset.tagsEn || link.dataset.tagsFr : link.dataset.tagsFr;
-    const tags = JSON.parse(tagsSource || "[]");
-    return Array.isArray(tags) ? tags.filter(Boolean) : [];
-  } catch {
-    return [];
-  }
-}
-
-function renderProjectTags(container, link) {
-  if (!container) {
-    return;
-  }
-
-  if (!link) {
-    container.hidden = true;
-    container.replaceChildren();
-    return;
-  }
-
-  const tags = getProjectTags(link);
-  container.hidden = tags.length === 0;
-  container.replaceChildren(...tags.map((tag) => {
-    const pill = document.createElement("span");
-    pill.textContent = tag;
-    return pill;
-  }));
-}
-
 function formatProjectDate(dateValue) {
   if (!dateValue) {
     return "";
@@ -202,6 +181,275 @@ function formatProjectDate(dateValue) {
   }
 
   return `${day}/${month}/${year}`;
+}
+
+function getYouTubeApiKey() {
+  return String(
+    window.PORTFOLIO_YOUTUBE_API_KEY ||
+      window.YOUTUBE_API_KEY ||
+      youtubeApiKeyMeta?.getAttribute("content") ||
+      ""
+  ).trim();
+}
+
+function getNormalizedYouTubeViewCount(viewCount) {
+  const normalizedViewCount = String(viewCount || "").trim();
+
+  return /^\d+$/.test(normalizedViewCount) ? normalizedViewCount : "";
+}
+
+function formatYouTubeViewCount(viewCount) {
+  const normalizedViewCount = getNormalizedYouTubeViewCount(viewCount);
+  const numericViewCount = Number(normalizedViewCount);
+
+  if (!normalizedViewCount || !Number.isFinite(numericViewCount)) {
+    return "";
+  }
+
+  const units = [
+    { value: 1_000_000_000, suffix: "B" },
+    { value: 1_000_000, suffix: "M" },
+    { value: 1_000, suffix: "K" },
+  ];
+  const unit = units.find((candidate) => numericViewCount >= candidate.value);
+
+  if (!unit) {
+    return String(numericViewCount);
+  }
+
+  const scaledViewCount = numericViewCount / unit.value;
+  const maximumFractionDigits = scaledViewCount >= 10 || Number.isInteger(scaledViewCount) ? 0 : 1;
+  const factor = 10 ** maximumFractionDigits;
+  const truncatedViewCount = Math.floor(scaledViewCount * factor) / factor;
+  const formattedViewCount = truncatedViewCount.toFixed(maximumFractionDigits).replace(/\.0$/, "");
+
+  return `${formattedViewCount}${unit.suffix}`;
+}
+
+function getYouTubeViewsText(viewCount) {
+  const normalizedViewCount = getNormalizedYouTubeViewCount(viewCount);
+  const formattedViewCount = formatYouTubeViewCount(normalizedViewCount);
+  const numericViewCount = Number(normalizedViewCount);
+
+  if (!formattedViewCount) {
+    return "";
+  }
+
+  const copy = translations[currentLanguage];
+  const label =
+    currentLanguage === "fr" && numericViewCount >= 1_000_000
+      ? `de ${copy.youtubeViewsPlural}`
+      : normalizedViewCount === "1"
+        ? copy.youtubeViewsSingular
+        : copy.youtubeViewsPlural;
+
+  return `${formattedViewCount} ${label}`;
+}
+
+function createEyeIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const eyeShape = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  const pupil = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+  svg.setAttribute("class", "project-video-stats-icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  eyeShape.setAttribute(
+    "d",
+    "M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"
+  );
+  pupil.setAttribute("cx", "12");
+  pupil.setAttribute("cy", "12");
+  pupil.setAttribute("r", "3");
+  svg.append(eyeShape, pupil);
+
+  return svg;
+}
+
+function renderYouTubeViewCounter(counter) {
+  const videoId = counter.dataset.youtubeViews || "";
+  const viewCount = youtubeViewCounts.get(videoId) || "";
+  const text = getYouTubeViewsText(viewCount);
+  const label = currentLanguage === "en" ? `${text} on YouTube` : `${text} sur YouTube`;
+
+  counter.hidden = !text;
+
+  if (text) {
+    const textElement = document.createElement("span");
+
+    textElement.textContent = text;
+    counter.replaceChildren(createEyeIcon(), textElement);
+    counter.setAttribute("aria-label", label);
+  } else {
+    counter.replaceChildren();
+    counter.removeAttribute("aria-label");
+  }
+}
+
+function updateYouTubeVideoStats(container, link) {
+  if (!container) {
+    return;
+  }
+
+  const videoId = link?.dataset.youtubeVideoId || "";
+
+  container.dataset.youtubeViews = videoId;
+  renderYouTubeViewCounter(container);
+}
+
+function refreshYouTubeVideoStats() {
+  document.querySelectorAll("[data-project-video-stats]").forEach((container) => {
+    const card = container.closest(".activity-card");
+    const activeLink = card?.querySelector(".project-link.is-active");
+
+    updateYouTubeVideoStats(container, activeLink);
+  });
+}
+
+function getBatches(items, batchSize) {
+  const batches = [];
+
+  for (let index = 0; index < items.length; index += batchSize) {
+    batches.push(items.slice(index, index + batchSize));
+  }
+
+  return batches;
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
+
+async function fetchOfficialYouTubeViewCounts(videoIds) {
+  const apiKey = getYouTubeApiKey();
+  const viewCounts = new Map();
+
+  if (!apiKey || videoIds.length === 0) {
+    return viewCounts;
+  }
+
+  const batches = getBatches(videoIds, 50);
+
+  await Promise.all(
+    batches.map(async (batch) => {
+      const url = new URL("https://www.googleapis.com/youtube/v3/videos");
+
+      url.searchParams.set("part", "statistics");
+      url.searchParams.set("id", batch.join(","));
+      url.searchParams.set("key", apiKey);
+
+      const data = await fetchJson(url);
+
+      (data.items || []).forEach((item) => {
+        const videoId = item.id;
+        const viewCount = getNormalizedYouTubeViewCount(item.statistics?.viewCount);
+
+        if (videoId && viewCount) {
+          viewCounts.set(videoId, viewCount);
+        }
+      });
+    })
+  );
+
+  return viewCounts;
+}
+
+async function fetchCachedYouTubeViewCounts(videoIds) {
+  const viewCounts = new Map();
+
+  try {
+    const data = await fetchJson(youtubeViewsDataPath);
+    const videos = data.videos || {};
+
+    videoIds.forEach((videoId) => {
+      const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount || videos[videoId]);
+
+      if (viewCount) {
+        viewCounts.set(videoId, viewCount);
+      }
+    });
+  } catch (error) {
+    console.warn("Unable to load cached YouTube stats.", error);
+  }
+
+  return viewCounts;
+}
+
+async function fetchYouTubeViewCounts(videoIds) {
+  const viewCounts = new Map();
+
+  try {
+    const officialViewCounts = await fetchOfficialYouTubeViewCounts(videoIds);
+
+    officialViewCounts.forEach((viewCount, videoId) => {
+      viewCounts.set(videoId, viewCount);
+    });
+  } catch (error) {
+    console.warn("Unable to load YouTube Data API stats.", error);
+  }
+
+  return viewCounts;
+}
+
+async function updateYouTubeViewCounts() {
+  const videoIds = [
+    ...new Set(
+      [...document.querySelectorAll("[data-youtube-video-id]")]
+        .map((link) => link.dataset.youtubeVideoId)
+        .filter(Boolean)
+    ),
+  ];
+
+  if (videoIds.length === 0) {
+    return;
+  }
+
+  try {
+    const cachedViewCounts = await fetchCachedYouTubeViewCounts(videoIds);
+
+    cachedViewCounts.forEach((viewCount, videoId) => {
+      youtubeViewCounts.set(videoId, viewCount);
+    });
+    refreshYouTubeVideoStats();
+
+    const viewCounts = await fetchYouTubeViewCounts(videoIds);
+
+    viewCounts.forEach((viewCount, videoId) => {
+      youtubeViewCounts.set(videoId, viewCount);
+    });
+    refreshYouTubeVideoStats();
+  } catch (error) {
+    console.warn("Unable to load YouTube view counts.", error);
+  }
+}
+
+function getProjectTimestamp(project) {
+  const timestamp = Date.parse(project.date);
+
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function getNewestVisibleProjectId(projects) {
+  const newestProject = projects.reduce((newest, project) => {
+    if (project.visible === false) {
+      return newest;
+    }
+
+    if (!newest || getProjectTimestamp(project) > getProjectTimestamp(newest)) {
+      return project;
+    }
+
+    return newest;
+  }, null);
+
+  return newestProject?.id || "";
 }
 
 function getLocalizedDiplomaValue(diploma, key) {
@@ -249,31 +497,38 @@ function renderDiplomas() {
   }));
 }
 
-function createProjectElement(project) {
+function createProjectElement(project, isNewestProject = false) {
   const hasUrl = Boolean(project.url);
   const item = document.createElement("div");
   const element = document.createElement(hasUrl ? "a" : "button");
   const title = document.createElement("span");
+  const meta = document.createElement("span");
   const date = document.createElement("time");
+  const youtubeVideoId = project.category === "writing" ? project.youtubeVideoId || "" : "";
 
   item.className = "project-item";
   item.classList.toggle("has-url", hasUrl);
+  item.classList.toggle("is-new", isNewestProject);
 
   element.className = "project-link";
+  element.dataset.newProject = isNewestProject ? "true" : "false";
   element.dataset.project = project.id;
   element.dataset.image = project.image || projectStore.defaultImagePath;
   element.dataset.altFr = project.altFr || `Visuel du projet ${project.titleFr}`;
   element.dataset.altEn = project.altEn || `Visual for ${project.titleEn || project.titleFr}`;
-  element.dataset.tagsFr = JSON.stringify(project.tagsFr || project.tags || []);
-  element.dataset.tagsEn = JSON.stringify(project.tagsEn || project.tagsFr || project.tags || []);
+  element.dataset.youtubeVideoId = youtubeVideoId;
 
+  title.className = "project-title";
   title.dataset.dynamicTitle = "";
   title.dataset.titleFr = project.titleFr;
   title.dataset.titleEn = project.titleEn || project.titleFr;
   title.textContent = project.titleFr;
 
+  meta.className = "project-meta";
+
   date.dateTime = project.date || "";
   date.textContent = formatProjectDate(project.date);
+  meta.append(date);
 
   if (hasUrl) {
     element.href = project.url;
@@ -283,7 +538,7 @@ function createProjectElement(project) {
     element.type = "button";
   }
 
-  element.append(title, date);
+  element.append(title, meta);
 
   if (hasUrl) {
     const openLink = document.createElement("a");
@@ -314,7 +569,11 @@ function renderProjectLists() {
   document.querySelectorAll("[data-project-list]").forEach((list) => {
     const category = list.dataset.projectList;
     const categoryProjects = projects.filter((project) => project.category === category && project.visible !== false);
-    list.replaceChildren(...categoryProjects.map(createProjectElement));
+    const newestVisibleProjectId = getNewestVisibleProjectId(categoryProjects);
+
+    list.replaceChildren(
+      ...categoryProjects.map((project) => createProjectElement(project, project.id === newestVisibleProjectId))
+    );
   });
 }
 
@@ -394,13 +653,19 @@ function translatePage(language) {
     const key = element.dataset.i18n;
 
     if (Object.prototype.hasOwnProperty.call(copy, key)) {
-      element.textContent = copy[key];
+      if (key === "heroIntro") {
+        element.innerHTML = copy[key];
+      } else {
+        element.textContent = copy[key];
+      }
     }
   });
 
   document.querySelectorAll(".project-link time[datetime]").forEach((element) => {
     element.textContent = formatProjectDate(element.getAttribute("datetime"));
   });
+
+  refreshYouTubeVideoStats();
 
   document.querySelectorAll("[data-dynamic-title]").forEach((element) => {
     element.textContent =
@@ -440,14 +705,14 @@ function translatePage(language) {
     const activeLink = panel.querySelector(".project-link.is-active");
     const card = panel.closest(".activity-card");
     const preview = card?.querySelector("[data-project-preview]");
-    const tagsContainer = card?.querySelector("[data-project-tags]");
+    const videoStatsContainer = card?.querySelector("[data-project-video-stats]");
 
     if (activeLink && preview) {
       preview.alt = getProjectAlt(activeLink);
     }
 
     if (activeLink) {
-      renderProjectTags(tagsContainer, activeLink);
+      updateYouTubeVideoStats(videoStatsContainer, activeLink);
     }
   });
 
@@ -544,11 +809,55 @@ function initializeProjectScrollbar(panel, projectList) {
   window.requestAnimationFrame(updateScrollbar);
 }
 
+function updateNewProjectSticker(panel, projectList) {
+  if (!panel || !projectList) {
+    return;
+  }
+
+  const newProjectLink = projectList.querySelector('.project-link[data-new-project="true"]');
+  let sticker = panel.querySelector(":scope > .project-new-sticker");
+
+  if (!newProjectLink) {
+    sticker?.remove();
+    return;
+  }
+
+  if (!sticker) {
+    sticker = document.createElement("span");
+    sticker.className = "project-new-sticker";
+    sticker.textContent = "NEW";
+    panel.append(sticker);
+  }
+
+  const linkRect = newProjectLink.getBoundingClientRect();
+  const listRect = projectList.getBoundingClientRect();
+  const panelRect = panel.getBoundingClientRect();
+  const stickerHideOffset = 3;
+  const isVisible = linkRect.top >= listRect.top - stickerHideOffset && linkRect.top < listRect.bottom;
+
+  sticker.classList.toggle("is-hidden", !isVisible);
+  panel.style.setProperty("--project-new-sticker-top", `${Math.round(linkRect.top - panelRect.top - 25)}px`);
+  panel.style.setProperty("--project-new-sticker-right", `${Math.round(panelRect.right - linkRect.right - 8)}px`);
+}
+
+function initializeNewProjectSticker(panel, projectList) {
+  if (!projectList) {
+    return;
+  }
+
+  const updateSticker = () => updateNewProjectSticker(panel, projectList);
+
+  projectList.addEventListener("scroll", updateSticker, { passive: true });
+  window.addEventListener("resize", updateSticker);
+  updateSticker();
+  window.requestAnimationFrame(updateSticker);
+}
+
 function initializeProjectPanels() {
   projectPanels.forEach((panel) => {
     const card = panel.closest(".activity-card");
     const preview = card?.querySelector("[data-project-preview]");
-    const tagsContainer = card?.querySelector("[data-project-tags]");
+    const videoStatsContainer = card?.querySelector("[data-project-video-stats]");
     const projectList = panel.querySelector(".project-list");
     const links = [...panel.querySelectorAll(".project-link")];
     const defaultLink = links.find((link) => link.getAttribute("aria-current") === "true") || links[0];
@@ -557,10 +866,11 @@ function initializeProjectPanels() {
 
     panel.style.setProperty("--visible-projects", visibleProjects);
     initializeProjectScrollbar(panel, projectList);
+    initializeNewProjectSticker(panel, projectList);
 
     function setActiveLink(link) {
       if (!link) {
-        renderProjectTags(tagsContainer, null);
+        updateYouTubeVideoStats(videoStatsContainer, null);
         return;
       }
 
@@ -570,7 +880,7 @@ function initializeProjectPanels() {
         });
       }
       switchPreview(preview, link);
-      renderProjectTags(tagsContainer, link);
+      updateYouTubeVideoStats(videoStatsContainer, link);
     }
 
     function activateProjectFromEvent(event) {
@@ -676,6 +986,7 @@ async function initializePortfolio() {
   initializePortfolioViews();
   initializeProjectPanels();
   initializeSocialHints();
+  updateYouTubeViewCounts();
 }
 
 initializePortfolio();

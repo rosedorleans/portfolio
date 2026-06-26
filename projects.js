@@ -17,23 +17,43 @@
     return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
 
-  function parseTags(tags) {
-    if (Array.isArray(tags)) {
-      return tags.map((tag) => String(tag).trim()).filter(Boolean);
+  function normalizeYouTubeVideoId(videoId) {
+    const normalizedVideoId = String(videoId || "").trim();
+
+    return /^[A-Za-z0-9_-]{11}$/.test(normalizedVideoId) ? normalizedVideoId : "";
+  }
+
+  function getYouTubeVideoId(url) {
+    try {
+      const videoUrl = new URL(url);
+      const host = videoUrl.hostname.replace(/^www\./, "").toLowerCase();
+      const pathParts = videoUrl.pathname.split("/").filter(Boolean);
+
+      if (host === "youtu.be") {
+        return normalizeYouTubeVideoId(pathParts[0]);
+      }
+
+      if (!["youtube.com", "m.youtube.com", "music.youtube.com", "youtube-nocookie.com"].includes(host)) {
+        return "";
+      }
+
+      if (videoUrl.pathname === "/watch") {
+        return normalizeYouTubeVideoId(videoUrl.searchParams.get("v"));
+      }
+
+      if (["embed", "shorts", "live"].includes(pathParts[0])) {
+        return normalizeYouTubeVideoId(pathParts[1]);
+      }
+    } catch {
+      return "";
     }
 
-    if (typeof tags === "string") {
-      return tags.split(",").map((tag) => tag.trim()).filter(Boolean);
-    }
-
-    return [];
+    return "";
   }
 
   function normalizeProject(project) {
     const titleFr = String(project.titleFr || project.title || "").trim();
     const titleEn = String(project.titleEn || titleFr).trim();
-    const tagsFr = parseTags(project.tagsFr || project.tags);
-    const tagsEn = parseTags(project.tagsEn || tagsFr);
 
     return {
       id: String(project.id || createId("project")),
@@ -45,9 +65,7 @@
       image: String(project.image || defaultImagePath),
       altFr: String(project.altFr || `Visuel du projet ${titleFr}`).trim(),
       altEn: String(project.altEn || `Visual for ${titleEn}`).trim(),
-      tagsFr,
-      tagsEn: tagsEn.length ? tagsEn : tagsFr,
-      tags: tagsFr,
+      youtubeVideoId: getYouTubeVideoId(project.url),
       visible: project.visible !== false,
     };
   }

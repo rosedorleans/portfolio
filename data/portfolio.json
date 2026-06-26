@@ -10,21 +10,6 @@
       "image": "assets/images/ecriture-zendaya.jpg",
       "altFr": "Visuel du projet L'histoire de Zendaya",
       "altEn": "Visual for Zendaya's Story",
-      "tagsFr": [
-        "youtube",
-        "storytelling",
-        "personnalité"
-      ],
-      "tagsEn": [
-        "youtube",
-        "storytelling",
-        "celebrity"
-      ],
-      "tags": [
-        "youtube",
-        "storytelling",
-        "personnalité"
-      ],
       "visible": true
     },
     {
@@ -37,21 +22,6 @@
       "image": "assets/images/ecriture-breaking-bad.jpg",
       "altFr": "Visuel du projet Le génie de Breaking Bad",
       "altEn": "Visual for The Genius of Breaking Bad",
-      "tagsFr": [
-        "youtube",
-        "storytelling",
-        "série tv"
-      ],
-      "tagsEn": [
-        "youtube",
-        "storytelling",
-        "tv show"
-      ],
-      "tags": [
-        "youtube",
-        "storytelling",
-        "série tv"
-      ],
       "visible": true
     },
     {
@@ -64,21 +34,6 @@
       "image": "assets/images/ecriture-bridgerton.jpg",
       "altFr": "Visuel du projet L'histoire de Bridgerton",
       "altEn": "Visual for Bridgerton's Story",
-      "tagsFr": [
-        "youtube",
-        "storytelling",
-        "série tv"
-      ],
-      "tagsEn": [
-        "youtube",
-        "storytelling",
-        "tv show"
-      ],
-      "tags": [
-        "youtube",
-        "storytelling",
-        "série tv"
-      ],
       "visible": true
     },
     {
@@ -91,21 +46,6 @@
       "image": "assets/images/trad-leafy-corner.jpg",
       "altFr": "Visuel du projet Leafy Corner",
       "altEn": "Visual for Leafy Corner",
-      "tagsFr": [
-        "jeu vidéo",
-        "simulation",
-        "cosy"
-      ],
-      "tagsEn": [
-        "video game",
-        "sim",
-        "cozy"
-      ],
-      "tags": [
-        "jeu vidéo",
-        "simulation",
-        "cosy"
-      ],
       "visible": true
     },
     {
@@ -118,21 +58,6 @@
       "image": "assets/images/trad-together-moon-escape.jpg",
       "altFr": "Visuel du projet Together: Moon Escape",
       "altEn": "Visual for Together: Moon Escape",
-      "tagsFr": [
-        "jeu vidéo",
-        "coop",
-        "espace"
-      ],
-      "tagsEn": [
-        "video game",
-        "coop",
-        "space"
-      ],
-      "tags": [
-        "jeu vidéo",
-        "coop",
-        "espace"
-      ],
       "visible": true
     },
     {
@@ -145,21 +70,6 @@
       "image": "assets/images/trad-ammossum.jpg",
       "altFr": "Visuel du projet Ammossum",
       "altEn": "Visual for Ammossum",
-      "tagsFr": [
-        "jeu vidéo",
-        "roguelike",
-        "opossum"
-      ],
-      "tagsEn": [
-        "video game",
-        "roguelike",
-        "possum"
-      ],
-      "tags": [
-        "jeu vidéo",
-        "roguelike",
-        "opossum"
-      ],
       "visible": true
     },
     {
@@ -172,21 +82,6 @@
       "image": "assets/images/trad-crown-siege.jpg",
       "altFr": "Visuel du projet Crown Siege",
       "altEn": "Visual for Crown Siege",
-      "tagsFr": [
-        "jeu vidéo",
-        "tower defense",
-        "couronnes"
-      ],
-      "tagsEn": [
-        "video game",
-        "tower defense",
-        "crowns"
-      ],
-      "tags": [
-        "jeu vidéo",
-        "tower defense",
-        "couronnes"
-      ],
       "visible": true
     },
     {
@@ -199,21 +94,6 @@
       "image": "assets/images/trad-wheel-make-it.jpg",
       "altFr": "Visuel du projet Wheel Make It",
       "altEn": "Visual for Wheel Make It",
-      "tagsFr": [
-        "jeu vidéo",
-        "coop",
-        "fauteuil roulant"
-      ],
-      "tagsEn": [
-        "video game",
-        "coop",
-        "wheelchair"
-      ],
-      "tags": [
-        "jeu vidéo",
-        "coop",
-        "fauteuil roulant"
-      ],
       "visible": true
     },
     {
@@ -221,26 +101,23 @@
       "category": "translation",
       "titleFr": "Void Pachinko",
       "titleEn": "Void Pachinko",
-      "date": "2026-06-08",
+      "date": "2026-06-11",
       "url": "https://store.steampowered.com/app/4077060/Void_Pachinko/",
       "image": "assets/images/trad-void-pachinko.jpg",
       "altFr": "Visuel du projet Void Pachinko",
       "altEn": "Visual for Void Pachinko",
-      "tagsFr": [
-        "jeu vidéo",
-        "Stratégie",
-        "pachinko"
-      ],
-      "tagsEn": [
-        "video game",
-        "Strategy",
-        "pachinko"
-      ],
-      "tags": [
-        "jeu vidéo",
-        "Stratégie",
-        "pachinko"
-      ],
+      "visible": true
+    },
+    {
+      "id": "The First Million",
+      "category": "translation",
+      "titleFr": "The First Million",
+      "titleEn": "The First Million",
+      "date": "2026-06-26",
+      "url": "https://store.steampowered.com/app/4446010/The_First_Million/",
+      "image": "assets/images/trad-the-first-million.jpg",
+      "altFr": "Visuel du projet The First Million",
+      "altEn": "Visual for The First Million",
       "visible": true
     }
   ],
