@@ -11,6 +11,9 @@ const socialHintLinks = document.querySelectorAll("[data-social-hint]");
 const youtubeApiKeyMeta = document.querySelector('meta[name="youtube-api-key"]');
 const projectStore = window.portfolioProjectStore;
 const youtubeViewsDataPath = "data/youtube-views.json";
+const youtubeViewsRemoteDataPath =
+  window.PORTFOLIO_YOUTUBE_VIEWS_URL ||
+  "https://raw.githubusercontent.com/rosedorleans/portfolio/main/data/youtube-views.json";
 let currentLanguage = "fr";
 let typewriterTimers = [];
 let activeSocialHintKey = "";
@@ -363,20 +366,26 @@ async function fetchOfficialYouTubeViewCounts(videoIds) {
 
 async function fetchCachedYouTubeViewCounts(videoIds) {
   const viewCounts = new Map();
+  const sources = [
+    youtubeViewsDataPath,
+    `${youtubeViewsRemoteDataPath}?updated=${Date.now()}`,
+  ];
 
-  try {
-    const data = await fetchJson(youtubeViewsDataPath);
-    const videos = data.videos || {};
+  for (const source of sources) {
+    try {
+      const data = await fetchJson(source);
+      const videos = data.videos || {};
 
-    videoIds.forEach((videoId) => {
-      const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount || videos[videoId]);
+      videoIds.forEach((videoId) => {
+        const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount || videos[videoId]);
 
-      if (viewCount) {
-        viewCounts.set(videoId, viewCount);
-      }
-    });
-  } catch (error) {
-    console.warn("Unable to load cached YouTube stats.", error);
+        if (viewCount) {
+          viewCounts.set(videoId, viewCount);
+        }
+      });
+    } catch (error) {
+      console.warn(`Unable to load cached YouTube stats from ${source}.`, error);
+    }
   }
 
   return viewCounts;

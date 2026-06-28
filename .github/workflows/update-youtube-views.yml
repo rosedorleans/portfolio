@@ -1,8 +1,15 @@
 name: Update YouTube views
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/portfolio.json"
+      - "scripts/update-youtube-views.mjs"
+      - ".github/workflows/update-youtube-views.yml"
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:

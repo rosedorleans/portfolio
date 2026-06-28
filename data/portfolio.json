@@ -1,51 +1,53 @@
 {
+  "diplomas": [
+    {
+      "id": "master-web",
+      "titleFr": "Master développement web",
+      "titleEn": "Master's degree in Web Development",
+      "sectorFr": "Développement web",
+      "sectorEn": "Web development",
+      "placeFr": "ECV, Nantes",
+      "placeEn": "ECV, Nantes",
+      "yearFr": "2024",
+      "yearEn": "2024",
+      "visible": true
+    },
+    {
+      "id": "deug-llce",
+      "titleFr": "LLCE Anglais",
+      "titleEn": "English Litt Degree",
+      "sectorFr": "Lettres et Langues étrangères",
+      "sectorEn": "Litt & Foreign languages",
+      "placeFr": "Sorbonne Nouvelle, Paris / Université de Nantes ",
+      "placeEn": "Sorbonne, Paris / Nantes University",
+      "yearFr": "2018",
+      "yearEn": "2018",
+      "visible": true
+    },
+    {
+      "id": "prepa-arts",
+      "titleFr": "Classe prépa d'arts graphiques",
+      "titleEn": "Graphic Arts Preparatory Class",
+      "sectorFr": "Arts graphiques",
+      "sectorEn": "Graphic arts",
+      "placeFr": "EPSAA, Paris",
+      "placeEn": "EPSAA, Paris",
+      "yearFr": "2016",
+      "yearEn": "2016",
+      "visible": true
+    }
+  ],
   "projects": [
     {
-      "id": "zendaya",
-      "category": "writing",
-      "titleFr": "L'histoire de Zendaya",
-      "titleEn": "Zendaya's Story",
-      "date": "2026-04-19",
-      "url": "https://youtu.be/IlTuUsHBvnU?si=4QRusCy_ALb-UeDB",
-      "image": "assets/images/ecriture-zendaya.jpg",
-      "altFr": "Visuel du projet L'histoire de Zendaya",
-      "altEn": "Visual for Zendaya's Story",
-      "visible": true
-    },
-    {
-      "id": "breaking-bad",
-      "category": "writing",
-      "titleFr": "Le génie de Breaking Bad",
-      "titleEn": "The Genius of Breaking Bad",
-      "date": "2026-03-22",
-      "url": "https://youtu.be/fNx3EiwwY14?si=Rv0JVQb70m6iimsz",
-      "image": "assets/images/ecriture-breaking-bad.jpg",
-      "altFr": "Visuel du projet Le génie de Breaking Bad",
-      "altEn": "Visual for The Genius of Breaking Bad",
-      "visible": true
-    },
-    {
-      "id": "bridgerton",
-      "category": "writing",
-      "titleFr": "L'histoire de Bridgerton",
-      "titleEn": "Bridgerton's Story",
-      "date": "2026-03-01",
-      "url": "https://youtu.be/Kg--E0-0p6w?si=kNLxxeuFx3YCCHT5",
-      "image": "assets/images/ecriture-bridgerton.jpg",
-      "altFr": "Visuel du projet L'histoire de Bridgerton",
-      "altEn": "Visual for Bridgerton's Story",
-      "visible": true
-    },
-    {
-      "id": "leafy-corner",
+      "id": "ammossum",
       "category": "translation",
-      "titleFr": "Leafy Corner",
-      "titleEn": "Leafy Corner",
-      "date": "2026-04-10",
-      "url": "https://store.steampowered.com/app/3558600/Leafy_Corner/",
-      "image": "assets/images/trad-leafy-corner.jpg",
-      "altFr": "Visuel du projet Leafy Corner",
-      "altEn": "Visual for Leafy Corner",
+      "titleFr": "Ammossum",
+      "titleEn": "Ammossum",
+      "date": "2026-02-23",
+      "url": "https://store.steampowered.com/app/2659600/Ammossum/",
+      "image": "assets/images/trad-ammossum.jpg",
+      "altFr": "Visuel du projet Ammossum",
+      "altEn": "Visual for Ammossum",
       "visible": true
     },
     {
@@ -61,15 +63,51 @@
       "visible": true
     },
     {
-      "id": "ammossum",
+      "id": "bridgerton",
+      "category": "writing",
+      "titleFr": "L'histoire de Bridgerton",
+      "titleEn": "Bridgerton's Story",
+      "date": "2026-03-01",
+      "url": "https://youtu.be/Kg--E0-0p6w?si=kNLxxeuFx3YCCHT5",
+      "image": "assets/images/ecriture-bridgerton.jpg",
+      "altFr": "Visuel du projet L'histoire de Bridgerton",
+      "altEn": "Visual for Bridgerton's Story",
+      "visible": true
+    },
+    {
+      "id": "breaking-bad",
+      "category": "writing",
+      "titleFr": "Le génie de Breaking Bad",
+      "titleEn": "The Genius of Breaking Bad",
+      "date": "2026-03-22",
+      "url": "https://youtu.be/fNx3EiwwY14?si=Rv0JVQb70m6iimsz",
+      "image": "assets/images/ecriture-breaking-bad.jpg",
+      "altFr": "Visuel du projet Le génie de Breaking Bad",
+      "altEn": "Visual for The Genius of Breaking Bad",
+      "visible": true
+    },
+    {
+      "id": "leafy-corner",
       "category": "translation",
-      "titleFr": "Ammossum",
-      "titleEn": "Ammossum",
-      "date": "2026-02-23",
-      "url": "https://store.steampowered.com/app/2659600/Ammossum/",
-      "image": "assets/images/trad-ammossum.jpg",
-      "altFr": "Visuel du projet Ammossum",
-      "altEn": "Visual for Ammossum",
+      "titleFr": "Leafy Corner",
+      "titleEn": "Leafy Corner",
+      "date": "2026-04-10",
+      "url": "https://store.steampowered.com/app/3558600/Leafy_Corner/",
+      "image": "assets/images/trad-leafy-corner.jpg",
+      "altFr": "Visuel du projet Leafy Corner",
+      "altEn": "Visual for Leafy Corner",
+      "visible": true
+    },
+    {
+      "id": "zendaya",
+      "category": "writing",
+      "titleFr": "L'histoire de Zendaya",
+      "titleEn": "Zendaya's Story",
+      "date": "2026-04-19",
+      "url": "https://youtu.be/IlTuUsHBvnU?si=4QRusCy_ALb-UeDB",
+      "image": "assets/images/ecriture-zendaya.jpg",
+      "altFr": "Visuel du projet L'histoire de Zendaya",
+      "altEn": "Visual for Zendaya's Story",
       "visible": true
     },
     {
@@ -119,44 +157,19 @@
       "altFr": "Visuel du projet The First Million",
       "altEn": "Visual for The First Million",
       "visible": true
-    }
-  ],
-  "diplomas": [
-    {
-      "id": "master-web",
-      "titleFr": "Master développement web",
-      "titleEn": "Master's degree in Web Development",
-      "sectorFr": "Développement web",
-      "sectorEn": "Web development",
-      "placeFr": "ECV, Nantes",
-      "placeEn": "ECV, Nantes",
-      "yearFr": "2024",
-      "yearEn": "2024",
-      "visible": true
     },
     {
-      "id": "deug-llce",
-      "titleFr": "LLCE Anglais",
-      "titleEn": "English Litt Degree",
-      "sectorFr": "Lettres et Langues étrangères",
-      "sectorEn": "Litt & Foreign languages",
-      "placeFr": "Sorbonne Nouvelle, Paris / Université de Nantes ",
-      "placeEn": "Sorbonne, Paris / Nantes University",
-      "yearFr": "2018",
-      "yearEn": "2018",
-      "visible": true
-    },
-    {
-      "id": "prepa-arts",
-      "titleFr": "Classe prépa d'arts graphiques",
-      "titleEn": "Graphic Arts Preparatory Class",
-      "sectorFr": "Arts graphiques",
-      "sectorEn": "Graphic arts",
-      "placeFr": "EPSAA, Paris",
-      "placeEn": "EPSAA, Paris",
-      "yearFr": "2016",
-      "yearEn": "2016",
+      "id": "DC",
+      "category": "writing",
+      "titleFr": "L'histoire de DC",
+      "titleEn": "DC's Story",
+      "date": "2026-06-28",
+      "url": "https://youtu.be/CyWgF1Die0s",
+      "image": "assets/images/ecriture-dc-comics.jpg",
+      "altFr": "Visuel du projet L'histoire de DC",
+      "altEn": "Visual for DC's Story",
       "visible": true
     }
+
   ]
 }
