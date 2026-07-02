@@ -1,16 +1,11 @@
 {
-  "generatedAt": "2026-07-02T01:25:52.878Z",
+  "generatedAt": "2026-07-02T06:10:39.058Z",
   "source": "returnyoutubedislikeapi.com",
   "videos": {
     "fNx3EiwwY14": {
       "projectId": "breaking-bad",
       "title": "Le génie de Breaking Bad",
-      "viewCount": "1500654"
-    },
-    "Kg--E0-0p6w": {
-      "projectId": "bridgerton",
-      "title": "L'histoire de Bridgerton",
-      "viewCount": "951101"
+      "viewCount": "1504317"
     },
     "IlTuUsHBvnU": {
       "projectId": "zendaya",
@@ -20,7 +15,12 @@
     "CyWgF1Die0s": {
       "projectId": "DC",
       "title": "L'histoire de DC",
-      "viewCount": "250739"
+      "viewCount": "255984"
+    },
+    "Kg--E0-0p6w": {
+      "projectId": "bridgerton",
+      "title": "L'histoire de Bridgerton",
+      "viewCount": "951101"
     }
   }
 }
