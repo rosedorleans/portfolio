@@ -68,7 +68,7 @@
       "titleFr": "L'histoire de Bridgerton",
       "titleEn": "Bridgerton's Story",
       "date": "2026-03-01",
-      "url": "https://youtu.be/Kg--E0-0p6w?si=kNLxxeuFx3YCCHT5",
+      "url": "https://youtu.be/Kg--E0-0p6w",
       "image": "assets/images/ecriture-bridgerton.jpg",
       "altFr": "Visuel du projet L'histoire de Bridgerton",
       "altEn": "Visual for Bridgerton's Story",
@@ -80,7 +80,7 @@
       "titleFr": "Le génie de Breaking Bad",
       "titleEn": "The Genius of Breaking Bad",
       "date": "2026-03-22",
-      "url": "https://youtu.be/fNx3EiwwY14?si=Rv0JVQb70m6iimsz",
+      "url": "https://youtu.be/fNx3EiwwY14",
       "image": "assets/images/ecriture-breaking-bad.jpg",
       "altFr": "Visuel du projet Le génie de Breaking Bad",
       "altEn": "Visual for The Genius of Breaking Bad",
@@ -104,7 +104,7 @@
       "titleFr": "L'histoire de Zendaya",
       "titleEn": "Zendaya's Story",
       "date": "2026-04-19",
-      "url": "https://youtu.be/IlTuUsHBvnU?si=4QRusCy_ALb-UeDB",
+      "url": "https://youtu.be/IlTuUsHBvnU",
       "image": "assets/images/ecriture-zendaya.jpg",
       "altFr": "Visuel du projet L'histoire de Zendaya",
       "altEn": "Visual for Zendaya's Story",
@@ -169,7 +169,18 @@
       "altFr": "Visuel du projet L'histoire de DC",
       "altEn": "Visual for DC's Story",
       "visible": true
+    },
+    {
+      "id": "Christopher Nolan",
+      "category": "writing",
+      "titleFr": "Christopher Nolan",
+      "titleEn": "Christopher Nolan",
+      "date": "2026-07-21",
+      "url": "https://youtu.be/DtUcKxW8Ec8",
+      "image": "assets/images/ecriture-christopher-nolan.jpg",
+      "altFr": "Visuel du projet Christopher Nolan",
+      "altEn": "Visual for Christopher Nolan",
+      "visible": true
     }
-
   ]
 }

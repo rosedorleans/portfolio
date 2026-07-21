@@ -11,9 +11,12 @@ const socialHintLinks = document.querySelectorAll("[data-social-hint]");
 const youtubeApiKeyMeta = document.querySelector('meta[name="youtube-api-key"]');
 const projectStore = window.portfolioProjectStore;
 const youtubeViewsDataPath = "data/youtube-views.json";
+const youtubeViewsFunctionPath =
+  window.PORTFOLIO_YOUTUBE_VIEWS_FUNCTION_URL || "/.netlify/functions/youtube-views";
 const youtubeViewsRemoteDataPath =
   window.PORTFOLIO_YOUTUBE_VIEWS_URL ||
   "https://raw.githubusercontent.com/rosedorleans/portfolio/main/data/youtube-views.json";
+const minimumVisibleYouTubeViews = 100_000;
 let currentLanguage = "fr";
 let typewriterTimers = [];
 let activeSocialHintKey = "";
@@ -234,7 +237,7 @@ function getYouTubeViewsText(viewCount) {
   const formattedViewCount = formatYouTubeViewCount(normalizedViewCount);
   const numericViewCount = Number(normalizedViewCount);
 
-  if (!formattedViewCount) {
+  if (!formattedViewCount || numericViewCount < minimumVisibleYouTubeViews) {
     return "";
   }
 
@@ -366,6 +369,7 @@ async function fetchOfficialYouTubeViewCounts(videoIds) {
 
 async function fetchCachedYouTubeViewCounts(videoIds) {
   const viewCounts = new Map();
+  const cachedSources = [];
   const sources = [
     youtubeViewsDataPath,
     `${youtubeViewsRemoteDataPath}?updated=${Date.now()}`,
@@ -374,18 +378,56 @@ async function fetchCachedYouTubeViewCounts(videoIds) {
   for (const source of sources) {
     try {
       const data = await fetchJson(source);
-      const videos = data.videos || {};
+      const timestamp = Date.parse(data.generatedAt);
 
+      cachedSources.push({
+        timestamp: Number.isNaN(timestamp) ? 0 : timestamp,
+        videos: data.videos || {},
+      });
+    } catch (error) {
+      console.warn(`Unable to load cached YouTube stats from ${source}.`, error);
+    }
+  }
+
+  cachedSources
+    .sort((sourceA, sourceB) => sourceA.timestamp - sourceB.timestamp)
+    .forEach((source) => {
       videoIds.forEach((videoId) => {
-        const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount || videos[videoId]);
+        const viewCount = getNormalizedYouTubeViewCount(source.videos[videoId]?.viewCount || source.videos[videoId]);
 
         if (viewCount) {
           viewCounts.set(videoId, viewCount);
         }
       });
-    } catch (error) {
-      console.warn(`Unable to load cached YouTube stats from ${source}.`, error);
-    }
+    });
+
+  return viewCounts;
+}
+
+async function fetchNetlifyYouTubeViewCounts(videoIds) {
+  const viewCounts = new Map();
+
+  if (videoIds.length === 0) {
+    return viewCounts;
+  }
+
+  try {
+    const url = new URL(youtubeViewsFunctionPath, window.location.href);
+
+    url.searchParams.set("ids", videoIds.join(","));
+
+    const data = await fetchJson(url);
+    const videos = data.videos || {};
+
+    videoIds.forEach((videoId) => {
+      const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount || videos[videoId]);
+
+      if (viewCount) {
+        viewCounts.set(videoId, viewCount);
+      }
+    });
+  } catch {
+    return viewCounts;
   }
 
   return viewCounts;
@@ -424,6 +466,13 @@ async function updateYouTubeViewCounts() {
     const cachedViewCounts = await fetchCachedYouTubeViewCounts(videoIds);
 
     cachedViewCounts.forEach((viewCount, videoId) => {
+      youtubeViewCounts.set(videoId, viewCount);
+    });
+    refreshYouTubeVideoStats();
+
+    const netlifyViewCounts = await fetchNetlifyYouTubeViewCounts(videoIds);
+
+    netlifyViewCounts.forEach((viewCount, videoId) => {
       youtubeViewCounts.set(videoId, viewCount);
     });
     refreshYouTubeVideoStats();
