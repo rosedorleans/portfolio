@@ -42,7 +42,7 @@ function getYouTubeVideoId(url) {
 }
 
 function getNormalizedYouTubeViewCount(viewCount) {
-  const normalizedViewCount = String(viewCount || "").trim();
+  const normalizedViewCount = String(viewCount ?? "").trim();
 
   return /^\d+$/.test(normalizedViewCount) ? normalizedViewCount : "";
 }

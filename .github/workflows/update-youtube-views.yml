@@ -1,4 +1,4 @@
-name: Update YouTube views
+name: Update project statistics
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
     paths:
       - "data/portfolio.json"
       - "scripts/update-youtube-views.mjs"
+      - "scripts/update-steam-reviews.mjs"
       - ".github/workflows/update-youtube-views.yml"
   schedule:
     - cron: "17 * * * *"
@@ -28,15 +29,17 @@ jobs:
 
       - run: node scripts/update-youtube-views.mjs
 
-      - name: Commit updated views
+      - run: node scripts/update-steam-reviews.mjs
+
+      - name: Commit updated statistics
         run: |
-          if git diff --quiet data/youtube-views.json; then
-            echo "No YouTube view changes."
+          if git diff --quiet data/youtube-views.json data/steam-reviews.json; then
+            echo "No project statistics changes."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/youtube-views.json
-          git commit -m "Update YouTube view counts"
+          git add data/youtube-views.json data/steam-reviews.json
+          git commit -m "Update project statistics"
           git push

@@ -16,7 +16,6 @@ const youtubeViewsFunctionPath =
 const youtubeViewsRemoteDataPath =
   window.PORTFOLIO_YOUTUBE_VIEWS_URL ||
   "https://raw.githubusercontent.com/rosedorleans/portfolio/main/data/youtube-views.json";
-const minimumVisibleYouTubeViews = 100_000;
 let currentLanguage = "fr";
 let typewriterTimers = [];
 let activeSocialHintKey = "";
@@ -51,13 +50,17 @@ const translations = {
     heroIntro:
       '<span class="hero-intro-lead">Scripts, récits et localisations\nsensibles au ton, au rythme et aux détails.</span><span class="hero-intro-cta">Engagez-moi pour <strong>rechercher</strong>, <strong>écrire</strong>, <strong>relire</strong> ou <strong>traduire</strong>,\n et gagnez du temps et de la qualité sur vos projets.</span>',
     writingNumber: "01",
-    writingTitle: "Écriture",
+    writingTitle: "Écriture - Recherches",
     writingBody:
       "Autrice de script, passionnée par le cinéma et la pop culture. Mes 3 années d'études de lettres m'ont appris à rechercher, analyser, rédiger et comprendre les codes de l'écriture narrative.",
     writingVisualLabel: "Visuel du projet d'écriture sélectionné",
     writingProjectsLabel: "Projets d'écriture",
     youtubeViewsSingular: "vue",
     youtubeViewsPlural: "vues",
+    researchOnlyTag: "Recherches",
+    writingResearchTag: "Ecriture - Recherches",
+    steamReviewsSingular: "avis",
+    steamReviewsPlural: "avis",
     translationTitle: "Traduction",
     translationBody:
       "Traductrice spécialisée en jeux vidéo indés. Je suis bilingue anglais, et grâce à mon master en développement web, je peux comprendre les besoins techniques des studios.",
@@ -68,12 +71,12 @@ const translations = {
     footerLabel: "Réseaux et contact",
     socialEmail: "Email",
     socialInstagram: "Instagram",
-    socialX: "X",
+    socialYouTube: "Youtube",
     socialLetterboxd: "Letterboxd",
     socialGoodreads: "Goodreads",
     socialHintEmail: "Pour me contacter",
     socialHintInstagram: "Pour suivre mes actus",
-    socialHintX: "Pour suivre TOUTES mes actus",
+    socialHintYouTube: "Pour voir tous mes projets d'écriture",
     socialHintLetterboxd: "Pour voir ce que je regarde",
     socialHintGoodreads: "Pour voir ce que je lis",
   },
@@ -101,13 +104,17 @@ const translations = {
     heroIntro:
       '<span class="hero-intro-lead">Scripts, stories, and localizations\nshaped around tone, rhythm, and detail.</span><span class="hero-intro-cta">Hire me to <strong>research</strong>, <strong>write</strong>, <strong>proofread</strong>, or <strong>translate</strong>, and save time while raising the quality of your projects.</span>',
     writingNumber: "01",
-    writingTitle: "Writing",
+    writingTitle: "Writing - Research",
     writingBody:
       "Ghost writer with a love for cinema and pop culture. Three years of literature studies taught me how to research, write, analyze, synthesize, and understand the codes of narrative writing.",
     writingVisualLabel: "Selected writing project visual",
     writingProjectsLabel: "Writing projects",
     youtubeViewsSingular: "view",
     youtubeViewsPlural: "views",
+    researchOnlyTag: "Research",
+    writingResearchTag: "Writing - Research",
+    steamReviewsSingular: "review",
+    steamReviewsPlural: "reviews",
     translationTitle: "Translation",
     translationBody:
       "Translator specialized in indie video games. Born french, my web development background and litt studies help me understand english and studios' technical needs.",
@@ -118,12 +125,12 @@ const translations = {
     footerLabel: "Social links and contact",
     socialEmail: "Email",
     socialInstagram: "Instagram",
-    socialX: "X",
+    socialYouTube: "Youtube",
     socialLetterboxd: "Letterboxd",
     socialGoodreads: "Goodreads",
     socialHintEmail: "To contact me",
     socialHintInstagram: "To see my news",
-    socialHintX: "To see ALL my news",
+    socialHintYouTube: "To see all my writing projects",
     socialHintLetterboxd: "To see what I watch",
     socialHintGoodreads: "To see what I read",
   },
@@ -175,20 +182,6 @@ function getProjectAlt(link) {
   return link.textContent.trim();
 }
 
-function formatProjectDate(dateValue) {
-  if (!dateValue) {
-    return "";
-  }
-
-  const [year, month, day] = dateValue.split("-");
-
-  if (!year || !month || !day) {
-    return dateValue;
-  }
-
-  return `${day}/${month}/${year}`;
-}
-
 function getYouTubeApiKey() {
   return String(
     window.PORTFOLIO_YOUTUBE_API_KEY ||
@@ -199,7 +192,7 @@ function getYouTubeApiKey() {
 }
 
 function getNormalizedYouTubeViewCount(viewCount) {
-  const normalizedViewCount = String(viewCount || "").trim();
+  const normalizedViewCount = String(viewCount ?? "").trim();
 
   return /^\d+$/.test(normalizedViewCount) ? normalizedViewCount : "";
 }
@@ -237,7 +230,7 @@ function getYouTubeViewsText(viewCount) {
   const formattedViewCount = formatYouTubeViewCount(normalizedViewCount);
   const numericViewCount = Number(normalizedViewCount);
 
-  if (!formattedViewCount || numericViewCount < minimumVisibleYouTubeViews) {
+  if (!formattedViewCount) {
     return "";
   }
 
@@ -275,9 +268,38 @@ function createEyeIcon() {
 
 function renderYouTubeViewCounter(counter) {
   const videoId = counter.dataset.youtubeViews || "";
-  const viewCount = youtubeViewCounts.get(videoId) || "";
+  const viewCount = youtubeViewCounts.get(videoId) ?? "";
   const text = getYouTubeViewsText(viewCount);
-  const label = currentLanguage === "en" ? `${text} on YouTube` : `${text} sur YouTube`;
+  renderProjectCounter(counter, text, createEyeIcon, "YouTube");
+}
+
+function createReviewIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const bubble = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+  svg.setAttribute("class", "project-video-stats-icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  bubble.setAttribute("d", "M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3H13a8.5 8.5 0 0 1 8 8v.5Z");
+  svg.append(bubble);
+
+  return svg;
+}
+
+function renderSteamReviewCounter(counter, reviewCount) {
+  const count = reviewCount == null || reviewCount === "" ? NaN : Number(reviewCount);
+  const copy = translations[currentLanguage];
+  const label = count === 1 ? copy.steamReviewsSingular : copy.steamReviewsPlural;
+  const text = Number.isSafeInteger(count) && count > 0
+    ? `${new Intl.NumberFormat(currentLanguage === "fr" ? "fr-FR" : "en-US").format(count)} ${label}`
+    : "";
+
+  renderProjectCounter(counter, text, createReviewIcon, "Steam");
+}
+
+function renderProjectCounter(counter, text, createIcon, source) {
+  const label = currentLanguage === "en" ? `${text} on ${source}` : `${text} sur ${source}`;
 
   counter.hidden = !text;
 
@@ -285,7 +307,7 @@ function renderYouTubeViewCounter(counter) {
     const textElement = document.createElement("span");
 
     textElement.textContent = text;
-    counter.replaceChildren(createEyeIcon(), textElement);
+    counter.replaceChildren(createIcon(), textElement);
     counter.setAttribute("aria-label", label);
   } else {
     counter.replaceChildren();
@@ -293,7 +315,7 @@ function renderYouTubeViewCounter(counter) {
   }
 }
 
-function updateYouTubeVideoStats(container, link) {
+function updateProjectStats(container, link) {
   if (!container) {
     return;
   }
@@ -301,15 +323,32 @@ function updateYouTubeVideoStats(container, link) {
   const videoId = link?.dataset.youtubeVideoId || "";
 
   container.dataset.youtubeViews = videoId;
-  renderYouTubeViewCounter(container);
+
+  if (link?.dataset.category === "translation") {
+    renderSteamReviewCounter(container, link.dataset.steamReviewCount);
+  } else {
+    renderYouTubeViewCounter(container);
+  }
+
+  const visualStack = container.closest(".visual-stack");
+  const researchTag = visualStack?.querySelector("[data-project-research-tag]");
+
+  if (researchTag) {
+    const isWriting = link?.dataset.category === "writing";
+    const tagKey = link?.dataset.researchOnly === "true" ? "researchOnlyTag" : "writingResearchTag";
+
+    researchTag.textContent = isWriting ? translations[currentLanguage][tagKey] : "";
+    researchTag.hidden = !isWriting;
+    visualStack.classList.toggle("has-research-tag", isWriting);
+  }
 }
 
-function refreshYouTubeVideoStats() {
+function refreshProjectStats() {
   document.querySelectorAll("[data-project-video-stats]").forEach((container) => {
     const card = container.closest(".activity-card");
     const activeLink = card?.querySelector(".project-link.is-active");
 
-    updateYouTubeVideoStats(container, activeLink);
+    updateProjectStats(container, activeLink);
   });
 }
 
@@ -393,7 +432,7 @@ async function fetchCachedYouTubeViewCounts(videoIds) {
     .sort((sourceA, sourceB) => sourceA.timestamp - sourceB.timestamp)
     .forEach((source) => {
       videoIds.forEach((videoId) => {
-        const viewCount = getNormalizedYouTubeViewCount(source.videos[videoId]?.viewCount || source.videos[videoId]);
+        const viewCount = getNormalizedYouTubeViewCount(source.videos[videoId]?.viewCount ?? source.videos[videoId]);
 
         if (viewCount) {
           viewCounts.set(videoId, viewCount);
@@ -420,7 +459,7 @@ async function fetchNetlifyYouTubeViewCounts(videoIds) {
     const videos = data.videos || {};
 
     videoIds.forEach((videoId) => {
-      const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount || videos[videoId]);
+      const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount ?? videos[videoId]);
 
       if (viewCount) {
         viewCounts.set(videoId, viewCount);
@@ -468,21 +507,21 @@ async function updateYouTubeViewCounts() {
     cachedViewCounts.forEach((viewCount, videoId) => {
       youtubeViewCounts.set(videoId, viewCount);
     });
-    refreshYouTubeVideoStats();
+    refreshProjectStats();
 
     const netlifyViewCounts = await fetchNetlifyYouTubeViewCounts(videoIds);
 
     netlifyViewCounts.forEach((viewCount, videoId) => {
       youtubeViewCounts.set(videoId, viewCount);
     });
-    refreshYouTubeVideoStats();
+    refreshProjectStats();
 
     const viewCounts = await fetchYouTubeViewCounts(videoIds);
 
     viewCounts.forEach((viewCount, videoId) => {
       youtubeViewCounts.set(videoId, viewCount);
     });
-    refreshYouTubeVideoStats();
+    refreshProjectStats();
   } catch (error) {
     console.warn("Unable to load YouTube view counts.", error);
   }
@@ -560,8 +599,6 @@ function createProjectElement(project, isNewestProject = false) {
   const item = document.createElement("div");
   const element = document.createElement(hasUrl ? "a" : "button");
   const title = document.createElement("span");
-  const meta = document.createElement("span");
-  const date = document.createElement("time");
   const youtubeVideoId = project.category === "writing" ? project.youtubeVideoId || "" : "";
 
   item.className = "project-item";
@@ -575,18 +612,15 @@ function createProjectElement(project, isNewestProject = false) {
   element.dataset.altFr = project.altFr || `Visuel du projet ${project.titleFr}`;
   element.dataset.altEn = project.altEn || `Visual for ${project.titleEn || project.titleFr}`;
   element.dataset.youtubeVideoId = youtubeVideoId;
+  element.dataset.category = project.category;
+  element.dataset.researchOnly = String(project.researchOnly === true);
+  element.dataset.steamReviewCount = project.steamReviewCount ?? "";
 
   title.className = "project-title";
   title.dataset.dynamicTitle = "";
   title.dataset.titleFr = project.titleFr;
   title.dataset.titleEn = project.titleEn || project.titleFr;
   title.textContent = project.titleFr;
-
-  meta.className = "project-meta";
-
-  date.dateTime = project.date || "";
-  date.textContent = formatProjectDate(project.date);
-  meta.append(date);
 
   if (hasUrl) {
     element.href = project.url;
@@ -596,7 +630,7 @@ function createProjectElement(project, isNewestProject = false) {
     element.type = "button";
   }
 
-  element.append(title, meta);
+  element.append(title);
 
   if (hasUrl) {
     const openLink = document.createElement("a");
@@ -627,7 +661,12 @@ function renderProjectLists() {
   document.querySelectorAll("[data-project-list]").forEach((list) => {
     const category = list.dataset.projectList;
     const categoryProjects = projects.filter((project) => project.category === category && project.visible !== false);
-    const newestVisibleProjectId = getNewestVisibleProjectId(categoryProjects);
+
+    if (category === "translation") {
+      categoryProjects.sort((projectA, projectB) => (projectB.steamReviewCount ?? -1) - (projectA.steamReviewCount ?? -1));
+    }
+
+    const newestVisibleProjectId = category === "writing" ? getNewestVisibleProjectId(categoryProjects) : "";
 
     list.replaceChildren(
       ...categoryProjects.map((project) => createProjectElement(project, project.id === newestVisibleProjectId))
@@ -635,7 +674,7 @@ function renderProjectLists() {
   });
 }
 
-function markNewestProjectsAsDefault() {
+function markFirstProjectsAsDefault() {
   document.querySelectorAll("[data-project-panel]").forEach((panel) => {
     const links = [...panel.querySelectorAll(".project-link")];
 
@@ -719,11 +758,7 @@ function translatePage(language) {
     }
   });
 
-  document.querySelectorAll(".project-link time[datetime]").forEach((element) => {
-    element.textContent = formatProjectDate(element.getAttribute("datetime"));
-  });
-
-  refreshYouTubeVideoStats();
+  refreshProjectStats();
 
   document.querySelectorAll("[data-dynamic-title]").forEach((element) => {
     element.textContent =
@@ -770,7 +805,7 @@ function translatePage(language) {
     }
 
     if (activeLink) {
-      updateYouTubeVideoStats(videoStatsContainer, activeLink);
+      updateProjectStats(videoStatsContainer, activeLink);
     }
   });
 
@@ -928,7 +963,7 @@ function initializeProjectPanels() {
 
     function setActiveLink(link) {
       if (!link) {
-        updateYouTubeVideoStats(videoStatsContainer, null);
+        updateProjectStats(videoStatsContainer, null);
         return;
       }
 
@@ -938,7 +973,7 @@ function initializeProjectPanels() {
         });
       }
       switchPreview(preview, link);
-      updateYouTubeVideoStats(videoStatsContainer, link);
+      updateProjectStats(videoStatsContainer, link);
     }
 
     function activateProjectFromEvent(event) {
@@ -1039,7 +1074,7 @@ function initializeSocialHints() {
 async function initializePortfolio() {
   await projectStore.ready;
   renderProjectLists();
-  markNewestProjectsAsDefault();
+  markFirstProjectsAsDefault();
   translatePage(currentLanguage);
   initializePortfolioViews();
   initializeProjectPanels();

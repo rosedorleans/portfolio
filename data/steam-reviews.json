@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-09-13T10:08:05.632Z",
+  "source": "https://partner.steamgames.com/doc/store/getreviews",
+  "filters": {
+    "language": "all",
+    "review_type": "all",
+    "purchase_type": "all",
+    "filter_offtopic_activity": 0
+  },
+  "apps": {
+    "2659600": {
+      "projectId": "ammossum",
+      "title": "Ammossum",
+      "reviewCount": 0
+    },
+    "3558600": {
+      "projectId": "leafy-corner",
+      "title": "Leafy Corner",
+      "reviewCount": 2432
+    },
+    "3744430": {
+      "projectId": "together-moon-escape",
+      "title": "Together: Moon Escape",
+      "reviewCount": 974
+    },
+    "4077060": {
+      "projectId": "Void Pachinko",
+      "title": "Void Pachinko",
+      "reviewCount": 102
+    },
+    "4213320": {
+      "projectId": "Wheel Make It",
+      "title": "Wheel Make It",
+      "reviewCount": 0
+    },
+    "4310440": {
+      "projectId": "Crown Siege",
+      "title": "Crown Siege",
+      "reviewCount": 0
+    },
+    "4446010": {
+      "projectId": "The First Million",
+      "title": "The First Million",
+      "reviewCount": 102
+    }
+  }
+}

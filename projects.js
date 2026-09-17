@@ -1,6 +1,8 @@
 (() => {
   const defaultImagePath = "assets/images/nom.png";
   const dataPath = "data/portfolio.json";
+  const steamReviewsDataPath = "data/steam-reviews.json";
+  let steamReviewsCache = {};
   let projectsCache = [];
   let diplomasCache = [];
   let isLoaded = false;
@@ -54,6 +56,8 @@
   function normalizeProject(project) {
     const titleFr = String(project.titleFr || project.title || "").trim();
     const titleEn = String(project.titleEn || titleFr).trim();
+    const steamAppId = getSteamAppId(project.url);
+    const steamReviewCount = steamReviewsCache[steamAppId]?.reviewCount;
 
     return {
       id: String(project.id || createId("project")),
@@ -66,8 +70,20 @@
       altFr: String(project.altFr || `Visuel du projet ${titleFr}`).trim(),
       altEn: String(project.altEn || `Visual for ${titleEn}`).trim(),
       youtubeVideoId: getYouTubeVideoId(project.url),
+      researchOnly: project.researchOnly === true,
+      steamReviewCount: Number.isSafeInteger(steamReviewCount) && steamReviewCount >= 0 ? steamReviewCount : null,
       visible: project.visible !== false,
     };
+  }
+
+  function getSteamAppId(url) {
+    try {
+      const steamUrl = new URL(url);
+
+      return steamUrl.hostname === "store.steampowered.com" ? steamUrl.pathname.match(/^\/app\/(\d+)(?:\/|$)/)?.[1] || "" : "";
+    } catch {
+      return "";
+    }
   }
 
   function normalizeDiploma(diploma) {
@@ -110,15 +126,25 @@
     isLoaded = true;
   }
 
+  async function fetchData(url) {
+    const response = await fetch(url, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+  }
+
   async function load() {
     try {
-      const response = await fetch(dataPath, { cache: "no-store" });
+      const [portfolio, steamReviews] = await Promise.all([
+        fetchData(dataPath),
+        fetchData(steamReviewsDataPath).catch(() => null),
+      ]);
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      setData(await response.json());
+      steamReviewsCache = steamReviews?.apps || {};
+      setData(portfolio);
     } catch {
       setData({ projects: [], diplomas: [] });
     }
