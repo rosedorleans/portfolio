@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T05:56:49.863Z",
+  "generatedAt": "2026-09-18T11:18:27.904Z",
   "source": "https://partner.steamgames.com/doc/store/getreviews",
   "filters": {
     "language": "all",
@@ -16,7 +16,7 @@
     "3558600": {
       "projectId": "leafy-corner",
       "title": "Leafy Corner",
-      "reviewCount": 2496
+      "reviewCount": 2497
     },
     "4077060": {
       "projectId": "Void Pachinko",
