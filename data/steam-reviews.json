@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-19T20:42:50.633Z",
+  "generatedAt": "2026-09-19T23:08:32.693Z",
   "source": "https://partner.steamgames.com/doc/store/getreviews",
   "filters": {
     "language": "all",
@@ -16,12 +16,12 @@
     "3558600": {
       "projectId": "leafy-corner",
       "title": "Leafy Corner",
-      "reviewCount": 2522
+      "reviewCount": 2524
     },
     "4077060": {
       "projectId": "Void Pachinko",
       "title": "Void Pachinko",
-      "reviewCount": 103
+      "reviewCount": 104
     },
     "4213320": {
       "projectId": "Wheel Make It",
@@ -31,7 +31,7 @@
     "4310440": {
       "projectId": "Crown Siege",
       "title": "Crown Siege",
-      "reviewCount": 117
+      "reviewCount": 127
     },
     "4446010": {
       "projectId": "The First Million",
