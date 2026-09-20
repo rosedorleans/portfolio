@@ -6,8 +6,8 @@ on:
       - main
     paths:
       - "data/portfolio.json"
-      - "scripts/update-youtube-views.mjs"
-      - "scripts/update-steam-reviews.mjs"
+      - "scripts/**"
+      - "lib/**"
       - ".github/workflows/update-youtube-views.yml"
   schedule:
     - cron: "17 * * * *"
@@ -16,12 +16,18 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: project-statistics
+  cancel-in-progress: false
+
 jobs:
   update-youtube-views:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -42,4 +48,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/youtube-views.json data/steam-reviews.json
           git commit -m "Update project statistics"
+          git pull --rebase origin main
           git push

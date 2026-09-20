@@ -1,4 +1,5 @@
 [build]
+  command = "node scripts/update-youtube-views.mjs && node scripts/update-steam-reviews.mjs"
   publish = "."
 
 [functions]

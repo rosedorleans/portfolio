@@ -70,6 +70,7 @@
       altFr: String(project.altFr || `Visuel du projet ${titleFr}`).trim(),
       altEn: String(project.altEn || `Visual for ${titleEn}`).trim(),
       youtubeVideoId: getYouTubeVideoId(project.url),
+      steamAppId,
       researchOnly: project.researchOnly === true,
       steamReviewCount: Number.isSafeInteger(steamReviewCount) && steamReviewCount >= 0 ? steamReviewCount : null,
       visible: project.visible !== false,

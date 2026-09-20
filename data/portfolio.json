@@ -67,7 +67,7 @@
       "id": "breaking-bad",
       "category": "writing",
       "titleFr": "Le génie de Breaking Bad",
-      "researchOnly": false,
+      "researchOnly": true,
       "titleEn": "The Genius of Breaking Bad",
       "date": "2026-03-22",
       "url": "https://youtu.be/fNx3EiwwY14",
@@ -199,6 +199,19 @@
       "image": "assets/images/ecriture-fairouz.jpg",
       "altFr": "Visuel du projet Fairouz",
       "altEn": "Visual for Fairouz",
+      "visible": true
+    },
+    {
+      "id": "Les affiches de films vous manipulent",
+      "category": "writing",
+      "titleFr": "Les affiches de films vous manipulent",
+      "researchOnly": false,
+      "titleEn": "Movie posters manipulate you",
+      "date": "2026-09-20",
+      "url": "https://youtu.be/aV_EbGzMhig",
+      "image": "assets/images/ecriture-affiches.jpg",
+      "altFr": "Visuel du projet Les affiches de films vous manipulent",
+      "altEn": "Visual for Les affiches de films vous manipulent",
       "visible": true
     }
   ]

@@ -16,6 +16,11 @@ const youtubeViewsFunctionPath =
 const youtubeViewsRemoteDataPath =
   window.PORTFOLIO_YOUTUBE_VIEWS_URL ||
   "https://raw.githubusercontent.com/rosedorleans/portfolio/main/data/youtube-views.json";
+const steamReviewsFunctionPath =
+  window.PORTFOLIO_STEAM_REVIEWS_FUNCTION_URL || "/.netlify/functions/steam-reviews";
+const steamReviewsRemoteDataPath =
+  window.PORTFOLIO_STEAM_REVIEWS_URL ||
+  "https://raw.githubusercontent.com/rosedorleans/portfolio/main/data/steam-reviews.json";
 let currentLanguage = "fr";
 let typewriterTimers = [];
 let activeSocialHintKey = "";
@@ -76,7 +81,7 @@ const translations = {
     socialGoodreads: "Goodreads",
     socialHintEmail: "Pour me contacter",
     socialHintInstagram: "Pour suivre mes actus",
-    socialHintYouTube: "Pour voir tous mes projets d'écriture",
+    socialHintYouTube: "Pour regarder toutes mes vidéos",
     socialHintLetterboxd: "Pour voir ce que je regarde",
     socialHintGoodreads: "Pour voir ce que je lis",
   },
@@ -130,7 +135,7 @@ const translations = {
     socialGoodreads: "Goodreads",
     socialHintEmail: "To contact me",
     socialHintInstagram: "To see my news",
-    socialHintYouTube: "To see all my writing projects",
+    socialHintYouTube: "To see all my videos",
     socialHintLetterboxd: "To see what I watch",
     socialHintGoodreads: "To see what I read",
   },
@@ -363,7 +368,7 @@ function getBatches(items, batchSize) {
 }
 
 async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(12_000) });
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
@@ -406,70 +411,44 @@ async function fetchOfficialYouTubeViewCounts(videoIds) {
   return viewCounts;
 }
 
-async function fetchCachedYouTubeViewCounts(videoIds) {
-  const viewCounts = new Map();
-  const cachedSources = [];
-  const sources = [
-    youtubeViewsDataPath,
-    `${youtubeViewsRemoteDataPath}?updated=${Date.now()}`,
-  ];
-
-  for (const source of sources) {
+async function fetchCachedProjectCounts({ ids, sources, collection, countKey, normalize, applyCounts }) {
+  const counts = new Map();
+  const timestamps = new Map();
+  await Promise.all(sources.map(async (source) => {
     try {
       const data = await fetchJson(source);
-      const timestamp = Date.parse(data.generatedAt);
-
-      cachedSources.push({
-        timestamp: Number.isNaN(timestamp) ? 0 : timestamp,
-        videos: data.videos || {},
-      });
-    } catch (error) {
-      console.warn(`Unable to load cached YouTube stats from ${source}.`, error);
-    }
-  }
-
-  cachedSources
-    .sort((sourceA, sourceB) => sourceA.timestamp - sourceB.timestamp)
-    .forEach((source) => {
-      videoIds.forEach((videoId) => {
-        const viewCount = getNormalizedYouTubeViewCount(source.videos[videoId]?.viewCount ?? source.videos[videoId]);
-
-        if (viewCount) {
-          viewCounts.set(videoId, viewCount);
+      ids.forEach((id) => {
+        const entry = data[collection]?.[id];
+        const count = normalize(entry?.[countKey] ?? entry);
+        const timestamp = Date.parse(entry?.updatedAt || data.generatedAt) || 0;
+        if (count !== null && count !== "" && timestamp >= (timestamps.get(id) ?? -1)) {
+          counts.set(id, count);
+          timestamps.set(id, timestamp);
         }
       });
-    });
-
-  return viewCounts;
+      applyCounts(counts);
+    } catch (error) {
+      console.warn(`Unable to load project stats from ${source}.`, error);
+    }
+  }));
 }
 
-async function fetchNetlifyYouTubeViewCounts(videoIds) {
-  const viewCounts = new Map();
-
-  if (videoIds.length === 0) {
-    return viewCounts;
-  }
-
-  try {
-    const url = new URL(youtubeViewsFunctionPath, window.location.href);
-
-    url.searchParams.set("ids", videoIds.join(","));
-
-    const data = await fetchJson(url);
-    const videos = data.videos || {};
-
-    videoIds.forEach((videoId) => {
-      const viewCount = getNormalizedYouTubeViewCount(videos[videoId]?.viewCount ?? videos[videoId]);
-
-      if (viewCount) {
-        viewCounts.set(videoId, viewCount);
-      }
-    });
-  } catch {
-    return viewCounts;
-  }
-
-  return viewCounts;
+async function fetchLiveProjectCounts({ ids, endpoint, collection, countKey, normalize }) {
+  const counts = new Map();
+  await Promise.all(getBatches(ids, 50).map(async (batch) => {
+    try {
+      const url = new URL(endpoint, window.location.href);
+      url.searchParams.set("ids", batch.join(","));
+      const data = await fetchJson(url);
+      batch.forEach((id) => {
+        const count = normalize(data[collection]?.[id]?.[countKey]);
+        if (count !== null && count !== "") counts.set(id, count);
+      });
+    } catch (error) {
+      console.warn(`Unable to refresh project stats from ${endpoint}.`, error);
+    }
+  }));
+  return counts;
 }
 
 async function fetchYouTubeViewCounts(videoIds) {
@@ -502,29 +481,53 @@ async function updateYouTubeViewCounts() {
   }
 
   try {
-    const cachedViewCounts = await fetchCachedYouTubeViewCounts(videoIds);
-
-    cachedViewCounts.forEach((viewCount, videoId) => {
-      youtubeViewCounts.set(videoId, viewCount);
+    const applyCounts = (counts) => {
+      counts.forEach((count, id) => youtubeViewCounts.set(id, count));
+      refreshProjectStats();
+    };
+    const options = { ids: videoIds, collection: "videos", countKey: "viewCount", normalize: getNormalizedYouTubeViewCount };
+    await fetchCachedProjectCounts({
+      ...options,
+      sources: [youtubeViewsDataPath, `${youtubeViewsRemoteDataPath}?updated=${Date.now()}`],
+      applyCounts,
     });
-    refreshProjectStats();
-
-    const netlifyViewCounts = await fetchNetlifyYouTubeViewCounts(videoIds);
-
-    netlifyViewCounts.forEach((viewCount, videoId) => {
-      youtubeViewCounts.set(videoId, viewCount);
-    });
-    refreshProjectStats();
-
-    const viewCounts = await fetchYouTubeViewCounts(videoIds);
-
-    viewCounts.forEach((viewCount, videoId) => {
-      youtubeViewCounts.set(videoId, viewCount);
-    });
-    refreshProjectStats();
+    applyCounts(await fetchLiveProjectCounts({ ...options, endpoint: youtubeViewsFunctionPath }));
+    applyCounts(await fetchYouTubeViewCounts(videoIds));
   } catch (error) {
     console.warn("Unable to load YouTube view counts.", error);
   }
+}
+
+function normalizeSteamReviewCount(value) {
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+
+async function updateSteamReviewCounts() {
+  const links = [...document.querySelectorAll("[data-steam-app-id]")].filter((link) => link.dataset.steamAppId);
+  const ids = [...new Set(links.map((link) => link.dataset.steamAppId))];
+  if (!ids.length) return;
+
+  const applyCounts = (counts) => {
+    links.forEach((link) => {
+      const count = counts.get(link.dataset.steamAppId);
+      if (count !== undefined) link.dataset.steamReviewCount = String(count);
+    });
+    document.querySelectorAll('[data-project-list="translation"]').forEach((list) => {
+      const getCount = (item) => Number(item.querySelector(".project-link").dataset.steamReviewCount || -1);
+      const items = [...list.children];
+      const sorted = [...items].sort((a, b) => getCount(b) - getCount(a));
+      if (sorted.some((item, index) => item !== items[index])) list.append(...sorted);
+      updateProjectScrollbar(list.closest("[data-project-panel]"), list);
+    });
+    refreshProjectStats();
+  };
+  const options = { ids, collection: "apps", countKey: "reviewCount", normalize: normalizeSteamReviewCount };
+  await fetchCachedProjectCounts({
+    ...options,
+    sources: ["data/steam-reviews.json", `${steamReviewsRemoteDataPath}?updated=${Date.now()}`],
+    applyCounts,
+  });
+  applyCounts(await fetchLiveProjectCounts({ ...options, endpoint: steamReviewsFunctionPath }));
 }
 
 function getProjectTimestamp(project) {
@@ -615,6 +618,7 @@ function createProjectElement(project, isNewestProject = false) {
   element.dataset.category = project.category;
   element.dataset.researchOnly = String(project.researchOnly === true);
   element.dataset.steamReviewCount = project.steamReviewCount ?? "";
+  element.dataset.steamAppId = project.steamAppId || "";
 
   title.className = "project-title";
   title.dataset.dynamicTitle = "";
@@ -1080,6 +1084,7 @@ async function initializePortfolio() {
   initializeProjectPanels();
   initializeSocialHints();
   updateYouTubeViewCounts();
+  updateSteamReviewCounts();
 }
 
 initializePortfolio();
