@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-20T14:08:14.644Z",
+  "generatedAt": "2026-09-20T16:49:03.634Z",
   "source": "https://partner.steamgames.com/doc/store/getreviews",
   "filters": {
     "language": "all",
@@ -12,37 +12,37 @@
       "projectId": "ammossum",
       "title": "Ammossum",
       "reviewCount": 0,
-      "updatedAt": "2026-09-20T14:08:14.644Z"
+      "updatedAt": "2026-09-20T16:49:03.634Z"
     },
     "3558600": {
       "projectId": "leafy-corner",
       "title": "Leafy Corner",
-      "reviewCount": 2535,
-      "updatedAt": "2026-09-20T14:08:14.644Z"
+      "reviewCount": 2537,
+      "updatedAt": "2026-09-20T16:49:03.634Z"
     },
     "4077060": {
       "projectId": "Void Pachinko",
       "title": "Void Pachinko",
       "reviewCount": 104,
-      "updatedAt": "2026-09-20T14:08:14.644Z"
+      "updatedAt": "2026-09-20T16:49:03.634Z"
     },
     "4213320": {
       "projectId": "Wheel Make It",
       "title": "Wheel Make It",
       "reviewCount": 0,
-      "updatedAt": "2026-09-20T14:08:14.644Z"
+      "updatedAt": "2026-09-20T16:49:03.634Z"
     },
     "4310440": {
       "projectId": "Crown Siege",
       "title": "Crown Siege",
-      "reviewCount": 163,
-      "updatedAt": "2026-09-20T14:08:14.644Z"
+      "reviewCount": 170,
+      "updatedAt": "2026-09-20T16:49:03.634Z"
     },
     "4446010": {
       "projectId": "The First Million",
       "title": "The First Million",
       "reviewCount": 102,
-      "updatedAt": "2026-09-20T14:08:14.644Z"
+      "updatedAt": "2026-09-20T16:49:03.634Z"
     }
   }
 }
