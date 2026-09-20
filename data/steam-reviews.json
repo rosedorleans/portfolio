@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-19T23:08:32.693Z",
+  "generatedAt": "2026-09-20T01:11:32.132Z",
   "source": "https://partner.steamgames.com/doc/store/getreviews",
   "filters": {
     "language": "all",
@@ -31,7 +31,7 @@
     "4310440": {
       "projectId": "Crown Siege",
       "title": "Crown Siege",
-      "reviewCount": 127
+      "reviewCount": 131
     },
     "4446010": {
       "projectId": "The First Million",
